@@ -1,5 +1,5 @@
-//import {MediaPlayer} from './media-player'
-
+import {MediaPlayer} from './media-player'
+console.log(window)
 const player = new MediaPlayer({
     BackgroundColor: "blue"
 })

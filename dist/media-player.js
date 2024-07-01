@@ -11,6 +11,312 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/MediaPlayer.js":
+/*!****************************!*\
+  !*** ./src/MediaPlayer.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   MediaPlayer: () => (/* binding */ MediaPlayer)
+/* harmony export */ });
+/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
+/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
+var MediaPlayer = /*#__PURE__*/function () {
+  function MediaPlayer(_ref) {
+    var _ref$position = _ref.position,
+      position = _ref$position === void 0 ? 'bottom-right' : _ref$position,
+      _ref$BackgroundColor = _ref.BackgroundColor,
+      BackgroundColor = _ref$BackgroundColor === void 0 ? "black" : _ref$BackgroundColor,
+      _ref$ButtonColor = _ref.ButtonColor,
+      ButtonColor = _ref$ButtonColor === void 0 ? "white" : _ref$ButtonColor,
+      _ref$ButtonShape = _ref.ButtonShape,
+      ButtonShape = _ref$ButtonShape === void 0 ? "rounded-square" : _ref$ButtonShape,
+      _ref$Mode = _ref.Mode,
+      Mode = _ref$Mode === void 0 ? "normal" : _ref$Mode,
+      _ref$Img = _ref.Img,
+      Img = _ref$Img === void 0 ? "../Newfolder/assets/img1.png" : _ref$Img,
+      _ref$Url = _ref.Url,
+      Url = _ref$Url === void 0 ? "../audio/1.mp3" : _ref$Url;
+    _classCallCheck(this, MediaPlayer);
+    this.position = this.getPosition(position);
+    this.open = false;
+    this.BackgroundColor = BackgroundColor;
+    this.ButtonColor = ButtonColor;
+    this.ButtonShape = ButtonShape;
+    this.Img = Img;
+    this.Url = Url;
+    this.initialise();
+    this.createStyles();
+  }
+  return _createClass(MediaPlayer, [{
+    key: "getPosition",
+    value: function getPosition(position) {
+      var _ref2;
+      var _position$split = position.split('-'),
+        vertical = _position$split[0],
+        horizontal = _position$split[1];
+      return _ref2 = {}, _ref2[vertical] = '30px', _ref2[horizontal] = '30px', _ref2;
+    }
+  }, {
+    key: "initialise",
+    value: function initialise() {
+      this.howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
+        src: [this.Url],
+        html5: true,
+        // Force to HTML5 so that the audio can stream in (best for large files).
+        onend: function onend() {
+          // Change pause to play.
+
+          //   this.play.classList.remove('pause');
+          //   this.play.classList.add('play');
+        }
+      });
+      var mediaPlayer = document.createElement('div');
+      mediaPlayer.style.position = 'relative';
+      mediaPlayer.style.backgroundColor = this.BackgroundColor;
+      mediaPlayer.classList.add('mediaPlayer');
+      document.body.appendChild(mediaPlayer);
+      this.mediaContainer = document.createElement('div');
+      this.mediaContainer.classList.add('mediaContainer');
+      this.createMediaContainerContent();
+      mediaPlayer.appendChild(this.mediaContainer);
+    }
+  }, {
+    key: "createMediaContainerContent",
+    value: function createMediaContainerContent() {
+      this.mediaContainer.innerHTML = '';
+      var mediaTop = document.createElement('div');
+      mediaTop.classList.add('mediaTop');
+      var title = document.createElement('h2');
+      title.classList.add('title');
+      title.textContent = "Media Player";
+      mediaTop.appendChild(title);
+      var mediaMiddle = document.createElement('div');
+      mediaMiddle.classList.add('mediaMiddle');
+      var mediaLibrary = document.createElement('div');
+      mediaLibrary.classList.add('mediaLibrary');
+      mediaMiddle.appendChild(mediaLibrary);
+      var playerImg = document.createElement('img');
+      playerImg.src = this.Img;
+      mediaLibrary.appendChild(playerImg);
+      var mediaBottom = document.createElement('div');
+      mediaBottom.classList.add('mediaBottom');
+      var playControl = document.createElement('div');
+      playControl.classList.add('playControl');
+      this.createBtn('prev', this.prev_btn.bind(this), playControl);
+      this.play = this.createBtn('play', this.play_btn.bind(this), playControl);
+      this.createBtn('next', this.next_btn.bind(this), playControl);
+      this.volume = this.createBtn('volumeUp', this.vol_btn.bind(this), playControl);
+      this.createBtn('loop', this.loop_btn.bind(this), playControl);
+      var mediaSeek = document.createElement('div');
+      mediaSeek.classList.add('mediaSeek');
+      var durationSlider = document.createElement('input');
+      durationSlider.type = 'range';
+      durationSlider.id = 'duration_slider';
+      durationSlider.min = '0';
+      durationSlider.max = '100';
+      durationSlider.value = '0';
+      this.durationSlider = durationSlider;
+      durationSlider.addEventListener('change', this.duration_change.bind(this));
+      mediaSeek.appendChild(durationSlider);
+      mediaBottom.appendChild(playControl);
+      mediaBottom.appendChild(mediaSeek);
+      // function load the track
+
+      this.load_track();
+      this.mediaContainer.appendChild(mediaTop);
+      this.mediaContainer.appendChild(mediaMiddle);
+      this.mediaContainer.appendChild(mediaBottom);
+    }
+  }, {
+    key: "load_track",
+    value: function load_track() {
+      this.durationSlider.value = this.howlPlayer.seek() / this.howlPlayer.duration() * 100;
+    }
+  }, {
+    key: "createBtn",
+    value: function createBtn(newClass, func, appender, updateClass) {
+      var btn = document.createElement('span');
+      btn.style.backgroundColor = this.ButtonColor;
+      btn.id = newClass;
+      btn.addEventListener('click', func);
+      btn.classList.add(newClass, updateClass);
+      return appender.appendChild(btn);
+    }
+  }, {
+    key: "prev_btn",
+    value: function prev_btn() {
+      console.log("prev");
+      //  this.howlPlayer.s()
+    }
+  }, {
+    key: "play_btn",
+    value: function play_btn() {
+      console.log("play");
+      this.open = !this.open;
+      if (this.open) {
+        this.howlPlayer.play();
+        this.play.classList.remove('play');
+        this.play.classList.add('pause');
+      } else {
+        this.howlPlayer.pause();
+        this.play.classList.add('play');
+        this.play.classList.remove('pause');
+      }
+    }
+  }, {
+    key: "range_slider",
+    value: function range_slider() {
+      var position = 0;
+
+      // update slider position
+      if (!this.howlPlayer.duration()) {
+        position = this.howlPlayer.seek() * (100 / this.howlPlayer.duration());
+        this.durationSlider.value = position;
+        console.log(position);
+      }
+    }
+  }, {
+    key: "next_btn",
+    value: function next_btn() {
+      console.log("next");
+    }
+  }, {
+    key: "vol_btn",
+    value: function vol_btn() {
+      console.log("vol");
+      this.mute = !this.mute;
+      if (this.mute) {
+        this.howlPlayer.mute(true);
+        this.volume.classList.remove('volumeUp');
+        this.volume.classList.add('volumeOff');
+      } else {
+        this.howlPlayer.mute(false);
+        this.volume.classList.add('volumeUp');
+        this.volume.classList.remove('volumeOff');
+      }
+    }
+  }, {
+    key: "loop_btn",
+    value: function loop_btn() {
+      console.log("loop");
+      this.loop = !this.loop;
+      if (this.mute) {
+        this.howlPlayer.loop(true);
+        this.volume.classList.remove('loop');
+        this.volume.classList.add('loopOff');
+      } else {
+        this.howlPlayer.loop(false);
+        this.volume.classList.add('loop');
+        this.volume.classList.remove('loopOff');
+      }
+    }
+  }, {
+    key: "duration_change",
+    value: function duration_change() {
+      var slider_position = this.howlPlayer.duration() * (this.durationSlider.value / 100);
+      this.howlPlayer.seek(slider_position);
+      // console.log("duration", this.durationSlider.value, 'dur', this.howlPlayer.duration())
+    }
+  }, {
+    key: "createStyles",
+    value: function createStyles() {
+      var styleTag = document.createElement('style');
+      styleTag.innerHTML = "\n        .mediaPlayer {\n            height: auto;\n            width: 500px;\n            }\n\n        .mediaContainer {\n            position: relative;\n            display: flex;\n            margin: 0 auto;\n            width: 100%;\n            align-items: center;\n            justify-content: center;\n            flex-direction: column;\n            gap: 20px;\n            padding: 20px 0;\n        }\n\n        .mediaTop {\n            flex: 1;\n        }\n\n        .mediaTop .title {\n            color: white;\n        }\n\n        .mediaMiddle {\n            flex: 3;\n            display: flex;\n            flex-direction: row;\n            gap: 20px;\n        }\n\n        .mediaBottom {\n            flex: 1;\n            display: flex;\n            flex-direction: row;\n            align-items: center;\n            justify-content: center;\n            gap: 10px;\n        }\n\n        .playControl {\n            display: flex;\n            align-items: center;\n            gap: 5px;\n        }\n\n        .playControl button img {\n            width: 20px;\n            height: 20px;\n            cursor: pointer;\n        }\n\n        .mediaSeek {}\n\n        /*both range slider*/\n        input[type=\"range\"] {\n            -webkit-appearance: none;\n            width: 200px;\n            outline: none;\n            height: 2px;\n            margin: 0 15px;\n        }\n\n        input[type=\"range\"]::-webkit-slider-thumb {\n            -webkit-appearance: none;\n            height: 15px;\n            width: 3px;\n            background-color: rgb(84, 216, 75);\n            /* border-radius: 50%;*/\n            cursor: pointer;\n        }\n\n                \n        .play,\n        .pause,\n        .next,\n        .prev,\n        .volumeOff,\n        .volumeUp,\n        .loop {\n            cursor: pointer;\n            display: inline-block;\n            -webkit-mask-repeat: no-repeat;\n            mask-repeat: no-repeat;\n            -webkit-mask-size: 100% 100%;\n            mask-size: 100% 100%;\n        }\n        .play {\n            font-size: 1.5em;\n            width: 1.5em;\n            height: 1.5em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .pause {\n            font-size: 1.5em;\n            width: 1.5em;\n            height: 1.5em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .next {\n            width: 1em;\n            height: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .prev {\n            width: 1em;\n            height: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .loop {\n            width: 1em;\n            height: 1em;\n            font-size: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .volumeUp {\n            margin-left: 10px;\n            width: 1.1em;\n            height: 1.1em;\n            font-size: 1.1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .volumeOff {\n            margin-left: 10px;\n            width: 1em;\n            height: 1em;\n            font-size: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n        ".replace(/^\s+|\n/gm, '');
+      document.head.appendChild(styleTag);
+    }
+  }, {
+    key: "formatTime",
+    value: function formatTime(secs) {
+      var minutes = Math.floor(secs / 60) || 0;
+      var seconds = secs - minutes * 60 || 0;
+      return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+    }
+  }]);
+}();
+
+/***/ }),
+
+/***/ "./src/cat.js":
+/*!********************!*\
+  !*** ./src/cat.js ***!
+  \********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Cat)
+/* harmony export */ });
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var Cat = /*#__PURE__*/function () {
+  function Cat() {
+    _classCallCheck(this, Cat);
+    this._name = 'Cat';
+  }
+  return _createClass(Cat, [{
+    key: "name",
+    get: function get() {
+      return this._name;
+    }
+  }]);
+}();
+
+
+/***/ }),
+
+/***/ "./src/dog.ts":
+/*!********************!*\
+  !*** ./src/dog.ts ***!
+  \********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Dog)
+/* harmony export */ });
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+var Dog = /*#__PURE__*/function () {
+  function Dog() {
+    _classCallCheck(this, Dog);
+    _defineProperty(this, "_name", void 0);
+    this._name = "Dog";
+  }
+  return _createClass(Dog, [{
+    key: "name",
+    get: function get() {
+      return this._name;
+    }
+  }], [{
+    key: "oneThird",
+    get: function get() {
+      return 3.0 / 1.0;
+    }
+  }]);
+}();
+
+
+/***/ }),
+
 /***/ "./node_modules/howler/dist/howler.js":
 /*!********************************************!*\
   !*** ./node_modules/howler/dist/howler.js ***!
@@ -3359,229 +3665,20 @@ var __webpack_exports__ = {};
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   MediaPlayer: () => (/* binding */ MediaPlayer)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
-/* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/* harmony import */ var _MediaPlayer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MediaPlayer.js */ "./src/MediaPlayer.js");
+/* harmony import */ var _cat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cat.js */ "./src/cat.js");
+/* harmony import */ var _dog_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dog.ts */ "./src/dog.ts");
 
-var MediaPlayer = /*#__PURE__*/function () {
-  function MediaPlayer(_ref) {
-    var _ref$position = _ref.position,
-      position = _ref$position === void 0 ? 'bottom-right' : _ref$position,
-      _ref$BackgroundColor = _ref.BackgroundColor,
-      BackgroundColor = _ref$BackgroundColor === void 0 ? "black" : _ref$BackgroundColor,
-      _ref$ButtonColor = _ref.ButtonColor,
-      ButtonColor = _ref$ButtonColor === void 0 ? "white" : _ref$ButtonColor,
-      _ref$ButtonShape = _ref.ButtonShape,
-      ButtonShape = _ref$ButtonShape === void 0 ? "rounded-square" : _ref$ButtonShape,
-      _ref$Mode = _ref.Mode,
-      Mode = _ref$Mode === void 0 ? "normal" : _ref$Mode,
-      _ref$Img = _ref.Img,
-      Img = _ref$Img === void 0 ? "../Newfolder/assets/img1.png" : _ref$Img,
-      _ref$Url = _ref.Url,
-      Url = _ref$Url === void 0 ? "../audio/1.mp3" : _ref$Url;
-    _classCallCheck(this, MediaPlayer);
-    this.position = this.getPosition(position);
-    this.open = false;
-    this.BackgroundColor = BackgroundColor;
-    this.ButtonColor = ButtonColor;
-    this.ButtonShape = ButtonShape;
-    this.Img = Img;
-    this.Url = Url;
-    this.initialise();
-    this.createStyles();
-  }
-  return _createClass(MediaPlayer, [{
-    key: "getPosition",
-    value: function getPosition(position) {
-      var _ref2;
-      var _position$split = position.split('-'),
-        vertical = _position$split[0],
-        horizontal = _position$split[1];
-      return _ref2 = {}, _ref2[vertical] = '30px', _ref2[horizontal] = '30px', _ref2;
-    }
-  }, {
-    key: "initialise",
-    value: function initialise() {
-      this.howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
-        src: [this.Url],
-        html5: true,
-        // Force to HTML5 so that the audio can stream in (best for large files).
-        onend: function onend() {
-          // Change pause to play.
 
-          //   this.play.classList.remove('pause');
-          //   this.play.classList.add('play');
-        }
-      });
-      var mediaPlayer = document.createElement('div');
-      mediaPlayer.style.position = 'relative';
-      mediaPlayer.style.backgroundColor = this.BackgroundColor;
-      mediaPlayer.classList.add('mediaPlayer');
-      document.body.appendChild(mediaPlayer);
-      this.mediaContainer = document.createElement('div');
-      this.mediaContainer.classList.add('mediaContainer');
-      this.createMediaContainerContent();
-      mediaPlayer.appendChild(this.mediaContainer);
-    }
-  }, {
-    key: "createMediaContainerContent",
-    value: function createMediaContainerContent() {
-      this.mediaContainer.innerHTML = '';
-      var mediaTop = document.createElement('div');
-      mediaTop.classList.add('mediaTop');
-      var title = document.createElement('h2');
-      title.classList.add('title');
-      title.textContent = "Media Player";
-      mediaTop.appendChild(title);
-      var mediaMiddle = document.createElement('div');
-      mediaMiddle.classList.add('mediaMiddle');
-      var mediaLibrary = document.createElement('div');
-      mediaLibrary.classList.add('mediaLibrary');
-      mediaMiddle.appendChild(mediaLibrary);
-      var playerImg = document.createElement('img');
-      playerImg.src = this.Img;
-      mediaLibrary.appendChild(playerImg);
-      var mediaBottom = document.createElement('div');
-      mediaBottom.classList.add('mediaBottom');
-      var playControl = document.createElement('div');
-      playControl.classList.add('playControl');
-      this.createBtn('prev', this.prev_btn.bind(this), playControl);
-      this.play = this.createBtn('play', this.play_btn.bind(this), playControl);
-      this.createBtn('next', this.next_btn.bind(this), playControl);
-      this.volume = this.createBtn('volumeUp', this.vol_btn.bind(this), playControl);
-      this.createBtn('loop', this.loop_btn.bind(this), playControl);
-      var mediaSeek = document.createElement('div');
-      mediaSeek.classList.add('mediaSeek');
-      var durationSlider = document.createElement('input');
-      durationSlider.type = 'range';
-      durationSlider.id = 'duration_slider';
-      durationSlider.min = '0';
-      durationSlider.max = '100';
-      durationSlider.value = '0';
-      this.durationSlider = durationSlider;
-      durationSlider.addEventListener('change', this.duration_change.bind(this));
-      mediaSeek.appendChild(durationSlider);
-      mediaBottom.appendChild(playControl);
-      mediaBottom.appendChild(mediaSeek);
-      // function load the track
 
-      this.load_track();
-      this.mediaContainer.appendChild(mediaTop);
-      this.mediaContainer.appendChild(mediaMiddle);
-      this.mediaContainer.appendChild(mediaBottom);
-    }
-  }, {
-    key: "load_track",
-    value: function load_track() {
-      this.durationSlider.value = this.howlPlayer.seek() / this.howlPlayer.duration() * 100;
-    }
-  }, {
-    key: "createBtn",
-    value: function createBtn(newClass, func, appender, updateClass) {
-      var btn = document.createElement('span');
-      btn.style.backgroundColor = this.ButtonColor;
-      btn.id = newClass;
-      btn.addEventListener('click', func);
-      btn.classList.add(newClass, updateClass);
-      return appender.appendChild(btn);
-    }
-  }, {
-    key: "prev_btn",
-    value: function prev_btn() {
-      console.log("prev");
-      //  this.howlPlayer.s()
-    }
-  }, {
-    key: "play_btn",
-    value: function play_btn() {
-      console.log("play");
-      this.open = !this.open;
-      if (this.open) {
-        this.howlPlayer.play();
-        this.play.classList.remove('play');
-        this.play.classList.add('pause');
-      } else {
-        this.howlPlayer.pause();
-        this.play.classList.add('play');
-        this.play.classList.remove('pause');
-      }
-    }
-  }, {
-    key: "range_slider",
-    value: function range_slider() {
-      var position = 0;
-
-      // update slider position
-      if (!this.howlPlayer.duration()) {
-        position = this.howlPlayer.seek() * (100 / this.howlPlayer.duration());
-        this.durationSlider.value = position;
-        console.log(position);
-      }
-    }
-  }, {
-    key: "next_btn",
-    value: function next_btn() {
-      console.log("next");
-    }
-  }, {
-    key: "vol_btn",
-    value: function vol_btn() {
-      console.log("vol");
-      this.mute = !this.mute;
-      if (this.mute) {
-        this.howlPlayer.mute(true);
-        this.volume.classList.remove('volumeUp');
-        this.volume.classList.add('volumeOff');
-      } else {
-        this.howlPlayer.mute(false);
-        this.volume.classList.add('volumeUp');
-        this.volume.classList.remove('volumeOff');
-      }
-    }
-  }, {
-    key: "loop_btn",
-    value: function loop_btn() {
-      console.log("loop");
-      this.loop = !this.loop;
-      if (this.mute) {
-        this.howlPlayer.loop(true);
-        this.volume.classList.remove('loop');
-        this.volume.classList.add('loopOff');
-      } else {
-        this.howlPlayer.loop(false);
-        this.volume.classList.add('loop');
-        this.volume.classList.remove('loopOff');
-      }
-    }
-  }, {
-    key: "duration_change",
-    value: function duration_change() {
-      var slider_position = this.howlPlayer.duration() * (this.durationSlider.value / 100);
-      this.howlPlayer.seek(slider_position);
-      // console.log("duration", this.durationSlider.value, 'dur', this.howlPlayer.duration())
-    }
-  }, {
-    key: "createStyles",
-    value: function createStyles() {
-      var styleTag = document.createElement('style');
-      styleTag.innerHTML = "\n        .mediaPlayer {\n            height: auto;\n            width: 500px;\n            }\n\n        .mediaContainer {\n            position: relative;\n            display: flex;\n            margin: 0 auto;\n            width: 100%;\n            align-items: center;\n            justify-content: center;\n            flex-direction: column;\n            gap: 20px;\n            padding: 20px 0;\n        }\n\n        .mediaTop {\n            flex: 1;\n        }\n\n        .mediaTop .title {\n            color: white;\n        }\n\n        .mediaMiddle {\n            flex: 3;\n            display: flex;\n            flex-direction: row;\n            gap: 20px;\n        }\n\n        .mediaBottom {\n            flex: 1;\n            display: flex;\n            flex-direction: row;\n            align-items: center;\n            justify-content: center;\n            gap: 10px;\n        }\n\n        .playControl {\n            display: flex;\n            align-items: center;\n            gap: 5px;\n        }\n\n        .playControl button img {\n            width: 20px;\n            height: 20px;\n            cursor: pointer;\n        }\n\n        .mediaSeek {}\n\n        /*both range slider*/\n        input[type=\"range\"] {\n            -webkit-appearance: none;\n            width: 200px;\n            outline: none;\n            height: 2px;\n            margin: 0 15px;\n        }\n\n        input[type=\"range\"]::-webkit-slider-thumb {\n            -webkit-appearance: none;\n            height: 15px;\n            width: 3px;\n            background-color: rgb(84, 216, 75);\n            /* border-radius: 50%;*/\n            cursor: pointer;\n        }\n\n                \n        .play,\n        .pause,\n        .next,\n        .prev,\n        .volumeOff,\n        .volumeUp,\n        .loop {\n            cursor: pointer;\n            display: inline-block;\n            -webkit-mask-repeat: no-repeat;\n            mask-repeat: no-repeat;\n            -webkit-mask-size: 100% 100%;\n            mask-size: 100% 100%;\n        }\n        .play {\n            font-size: 1.5em;\n            width: 1.5em;\n            height: 1.5em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .pause {\n            font-size: 1.5em;\n            width: 1.5em;\n            height: 1.5em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .next {\n            width: 1em;\n            height: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .prev {\n            width: 1em;\n            height: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .loop {\n            width: 1em;\n            height: 1em;\n            font-size: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n            background-color: blue;\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .volumeUp {\n            margin-left: 10px;\n            width: 1.1em;\n            height: 1.1em;\n            font-size: 1.1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n\n        .volumeOff {\n            margin-left: 10px;\n            width: 1em;\n            height: 1em;\n            font-size: 1em;\n            --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n            -webkit-mask-image: var(--svg);\n            mask-image: var(--svg);\n        }\n        ".replace(/^\s+|\n/gm, '');
-      document.head.appendChild(styleTag);
-    }
-  }, {
-    key: "formatTime",
-    value: function formatTime(secs) {
-      var minutes = Math.floor(secs / 60) || 0;
-      var seconds = secs - minutes * 60 || 0;
-      return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    }
-  }]);
-}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  Dog: _dog_ts__WEBPACK_IMPORTED_MODULE_2__["default"],
+  Cat: _cat_js__WEBPACK_IMPORTED_MODULE_1__["default"],
+  MediaPlayer: _MediaPlayer_js__WEBPACK_IMPORTED_MODULE_0__.MediaPlayer
+});
+console.log("Hello world from the bundle!");
 })();
 
 __webpack_exports__ = __webpack_exports__["default"];
