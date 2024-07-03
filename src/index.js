@@ -1,4 +1,4 @@
-import { MediaPlayer } from "./MediaPlayer.js";
+import MediaPlayer from "./MediaPlayer.js";
 import Cat from "./cat.js";
 import Dog from "./dog.ts";
 

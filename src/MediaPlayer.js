@@ -1,13 +1,13 @@
 import { Howl, Howler } from 'howler';
 
-export class MediaPlayer {
+export default class MediaPlayer {
     constructor({ position = 'bottom-right',
         BackgroundColor = "black",
         ButtonColor = "white",
         ButtonShape = "rounded-square",
         Mode = "normal",
-        Img = "../Newfolder/assets/img1.png",
-        Url = "../audio/1.mp3",
+        Img = "./assets/img1.png",
+        Url = "./audio/1.mp3",
     }) {
 
         this.position = this.getPosition(position);
@@ -29,6 +29,7 @@ export class MediaPlayer {
     }
 
     initialise() {
+        console.log("player ready")
         this.howlPlayer = new Howl({
             src: [this.Url],
             html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
