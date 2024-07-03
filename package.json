@@ -1,6 +1,6 @@
 {
   "name": "media-player",
-  "version": "2.1.1",
+  "version": "1.0.0",
   "description": "Produce universal library with webpack and es6",
   "main": "dist/media-player.js",
   "scripts": {

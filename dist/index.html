@@ -4,26 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webpack & TypeScript</title>
-  <!-- <script type="module" src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/dist/media-player.js"></script>-->
-  </head>
-  
-  <body>
-    <div> test12</div>
-    <!-- add scripts here -->
-    
-    <script src="./media-player.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/dist/media-player.js"></script>
+</head>
+
+<body>
+  <div> test12</div>
+  <!-- add scripts here -->
+
   <script>
-      window.addEventListener("load", () => { 
-        const dog = new window["media-player"].MediaPlayer({
-          BackgroundColor: "green",
-          Url: "./audio/3.mp3"
-        });
-        new window["media-player"].MediaPlayer({
-          BackgroundColor: "blue",
-          Url: "./audio/2.mp3"
-        });
-       // console.log(dog.name, window["media-player"].Dog.oneThird);
+    window.addEventListener("load", () => {
+      new window["media-player"].MediaPlayer({
+        BackgroundColor: "green",
+        Url: "./audio/3.mp3"
       });
+      new window["media-player"].MediaPlayer({
+        BackgroundColor: "blue",
+        Url: "./audio/2.mp3"
+      });
+      // console.log(dog.name, window["media-player"].Dog.oneThird);
+    });
   </script>
 </body>
 
