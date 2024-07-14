@@ -1,6 +1,8 @@
 import { Howl, Howler } from 'howler';
 import { styles } from './styles';
-
+import { saveToLocalStorage, setVolume, updatePlay } from './MediaController';
+let player = []
+//console.log("Player is hot and ready to role")
 export default class MediaPlayer {
     constructor({ position = 'bottom-right',
         BackgroundColor = "black",
@@ -9,6 +11,8 @@ export default class MediaPlayer {
         Mode = "normal",
         Img = "./assets/img1.png",
         Url = "./audio/1.mp3",
+        HtmlId = "player1",
+        Volume = 50,
     }) {
 
         this.position = this.getPosition(position);
@@ -18,6 +22,9 @@ export default class MediaPlayer {
         this.ButtonShape = ButtonShape;
         this.Img = Img;
         this.Url = Url;
+        this.Id = HtmlId;
+        this.volume = Volume / 100;
+        this.playing = "not playing";
         this.initialise();
         this.createStyles();
     }
@@ -30,10 +37,14 @@ export default class MediaPlayer {
     }
 
     initialise() {
-        console.log("player ready")
+        console.log(`Currently have ${player.length + 1} playing`)
+        player.push({ volume: this.volume, playing: this.playing, butttonColor: this.ButtonColor, background: this.BackgroundColor, id: this.Id, media: this.Url })
+        saveToLocalStorage(player)
+
         this.howlPlayer = new Howl({
             src: [this.Url],
             html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
+            volume: this.volume,
             onend: function () {
                 // Change pause to play.
 
@@ -41,12 +52,15 @@ export default class MediaPlayer {
                 //   this.play.classList.add('play');
             },
         });
+        const theDiv = document.getElementById(this.Id);
         const mediaPlayer = document.createElement('div');
         mediaPlayer.style.position = 'relative';
+        //  mediaPlayer.id = this.Id;
         mediaPlayer.style.backgroundColor = this.BackgroundColor;
         mediaPlayer.classList.add('mediaPlayer');
 
-        document.body.appendChild(mediaPlayer);
+        document.body.appendChild(theDiv);
+        theDiv.appendChild(mediaPlayer);
 
         this.mediaContainer = document.createElement('div');
         this.mediaContainer.classList.add('mediaContainer');
@@ -136,17 +150,23 @@ export default class MediaPlayer {
         //  this.howlPlayer.s()
     }
     play_btn() {
-        console.log("play")
+        console.log("playing ")
 
         this.open = !this.open;
         if (this.open) {
             this.howlPlayer.play()
             this.play.classList.remove('play');
             this.play.classList.add('pause');
+            this.playing = "playing";
+            updatePlay(this.playing, this.Id)
+            this.volume = setVolume(this.Id)
+            console.log(this.volume, this.Id)
         } else {
             this.howlPlayer.pause()
             this.play.classList.add('play');
             this.play.classList.remove('pause');
+            this.playing = "paused"
+            updatePlay(this.playing, this.Id)
         }
     }
 
@@ -194,9 +214,10 @@ export default class MediaPlayer {
         this.howlPlayer.seek(slider_position)
         // console.log("duration", this.durationSlider.value, 'dur', this.howlPlayer.duration())
     }
+
     createStyles() {
         const styleTag = document.createElement('style');
-        styleTag.innerHTML =styles.replace(/^\s+|\n/gm, '');
+        styleTag.innerHTML = styles.replace(/^\s+|\n/gm, '');
         document.head.appendChild(styleTag);
     }
     formatTime(secs) {
@@ -205,4 +226,5 @@ export default class MediaPlayer {
 
         return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
     }
+
 }

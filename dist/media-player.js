@@ -11,6 +11,74 @@
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/MediaController.js":
+/*!********************************!*\
+  !*** ./src/MediaController.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   saveToLocalStorage: () => (/* binding */ saveToLocalStorage),
+/* harmony export */   setVolume: () => (/* binding */ setVolume),
+/* harmony export */   updatePlay: () => (/* binding */ updatePlay)
+/* harmony export */ });
+var saveToLocalStorage = function saveToLocalStorage(data) {
+  //generate a number/ id for each of the player
+  data.forEach(function (item, i) {
+    //then match that id to the player
+    item.playerId = i + 1;
+  });
+
+  //push the data to an array in localstorage
+  localStorage.setItem('player', JSON.stringify(data));
+};
+var updatePlay = function updatePlay(playing, id) {
+  var retrievedString = localStorage.getItem("player");
+  var parsedObject = JSON.parse(retrievedString);
+  var playedAudio = parsedObject.filter(function (x) {
+    return x.id === id;
+  });
+  playedAudio[0].playing = playing;
+  // console.log(parsedObject)
+  localStorage.setItem('player', JSON.stringify(parsedObject));
+};
+//we can always manipute the player based on its data
+
+//play and pause the rest
+
+//play and reduce volume of the rest
+var setVolume = function setVolume(id) {
+  var retrievedString = localStorage.getItem("player");
+  var parsedObject = JSON.parse(retrievedString);
+
+  // mode oneplayer at time
+  var playedAudio = parsedObject.filter(function (x) {
+    return x.id === id && x.playing === "playing";
+  });
+  var othersAudio = parsedObject.filter(function (x) {
+    return x.id !== id;
+  });
+
+  //setvolume to 100% and others to 50%
+  playedAudio[0].volume = 1;
+  for (var i = 0; i < playedAudio.length; i++) {
+    othersAudio[i].volume = 0.5;
+  }
+  console.log(parsedObject);
+  localStorage.setItem('player', JSON.stringify(parsedObject));
+
+  //mode= volumeincrease
+  if (id === playedAudio[0].id) {
+    return 1;
+  } else {
+    return 0;
+  }
+};
+
+/***/ }),
+
 /***/ "./src/MediaPlayer.js":
 /*!****************************!*\
   !*** ./src/MediaPlayer.js ***!
@@ -25,6 +93,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
 /* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles */ "./src/styles.js");
+/* harmony import */ var _MediaController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MediaController */ "./src/MediaController.js");
 function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
 function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
 function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
@@ -32,6 +101,9 @@ function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" 
 function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
+
+var player = [];
+//console.log("Player is hot and ready to role")
 var MediaPlayer = /*#__PURE__*/function () {
   function MediaPlayer(_ref) {
     var _ref$position = _ref.position,
@@ -47,7 +119,11 @@ var MediaPlayer = /*#__PURE__*/function () {
       _ref$Img = _ref.Img,
       Img = _ref$Img === void 0 ? "./assets/img1.png" : _ref$Img,
       _ref$Url = _ref.Url,
-      Url = _ref$Url === void 0 ? "./audio/1.mp3" : _ref$Url;
+      Url = _ref$Url === void 0 ? "./audio/1.mp3" : _ref$Url,
+      _ref$HtmlId = _ref.HtmlId,
+      HtmlId = _ref$HtmlId === void 0 ? "player1" : _ref$HtmlId,
+      _ref$Volume = _ref.Volume,
+      Volume = _ref$Volume === void 0 ? 50 : _ref$Volume;
     _classCallCheck(this, MediaPlayer);
     this.position = this.getPosition(position);
     this.open = false;
@@ -56,6 +132,9 @@ var MediaPlayer = /*#__PURE__*/function () {
     this.ButtonShape = ButtonShape;
     this.Img = Img;
     this.Url = Url;
+    this.Id = HtmlId;
+    this.volume = Volume / 100;
+    this.playing = "not playing";
     this.initialise();
     this.createStyles();
   }
@@ -71,11 +150,21 @@ var MediaPlayer = /*#__PURE__*/function () {
   }, {
     key: "initialise",
     value: function initialise() {
-      console.log("player ready");
+      console.log("Currently have " + (player.length + 1) + " playing");
+      player.push({
+        volume: this.volume,
+        playing: this.playing,
+        butttonColor: this.ButtonColor,
+        background: this.BackgroundColor,
+        id: this.Id,
+        media: this.Url
+      });
+      (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.saveToLocalStorage)(player);
       this.howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
         src: [this.Url],
         html5: true,
         // Force to HTML5 so that the audio can stream in (best for large files).
+        volume: this.volume,
         onend: function onend() {
           // Change pause to play.
 
@@ -83,11 +172,14 @@ var MediaPlayer = /*#__PURE__*/function () {
           //   this.play.classList.add('play');
         }
       });
+      var theDiv = document.getElementById(this.Id);
       var mediaPlayer = document.createElement('div');
       mediaPlayer.style.position = 'relative';
+      //  mediaPlayer.id = this.Id;
       mediaPlayer.style.backgroundColor = this.BackgroundColor;
       mediaPlayer.classList.add('mediaPlayer');
-      document.body.appendChild(mediaPlayer);
+      document.body.appendChild(theDiv);
+      theDiv.appendChild(mediaPlayer);
       this.mediaContainer = document.createElement('div');
       this.mediaContainer.classList.add('mediaContainer');
       this.createMediaContainerContent();
@@ -164,16 +256,22 @@ var MediaPlayer = /*#__PURE__*/function () {
   }, {
     key: "play_btn",
     value: function play_btn() {
-      console.log("play");
+      console.log("playing ");
       this.open = !this.open;
       if (this.open) {
         this.howlPlayer.play();
         this.play.classList.remove('play');
         this.play.classList.add('pause');
+        this.playing = "playing";
+        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.Id);
+        this.volume = (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.setVolume)(this.Id);
+        console.log(this.volume, this.Id);
       } else {
         this.howlPlayer.pause();
         this.play.classList.add('play');
         this.play.classList.remove('pause');
+        this.playing = "paused";
+        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.Id);
       }
     }
   }, {
