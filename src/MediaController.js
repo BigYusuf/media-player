@@ -48,3 +48,21 @@ export const setVolume = (id) => {
     }
 }
 
+export const getId = (id) => {
+    const retrievedString = localStorage.getItem("player");
+    const parsedObject = JSON.parse(retrievedString);
+
+    // check id && playing
+    let playedAudio = parsedObject.filter((x) => x.id === id && x.playing === "playing")
+    // let othersAudio = parsedObject.filter((x) => x.id !== id)
+
+    console.log(parsedObject)
+    localStorage.setItem('player', JSON.stringify(parsedObject));
+    if (playedAudio) {
+        return true
+    } else {
+        return false
+    }
+
+}
+

@@ -1,28 +1,31 @@
 import { Howl, Howler } from 'howler';
 import { styles } from './styles';
-import { saveToLocalStorage, setVolume, updatePlay } from './MediaController';
+import { getId, saveToLocalStorage, setVolume, updatePlay } from './MediaController';
 let player = []
 //console.log("Player is hot and ready to role")
 export default class MediaPlayer {
     constructor({ position = 'bottom-right',
         BackgroundColor = "black",
         ButtonColor = "white",
-        ButtonShape = "rounded-square",
+        ButtonShape = "rounded",
         Mode = "normal",
         Img = "./assets/img1.png",
         Url = "./audio/1.mp3",
         HtmlId = "player1",
         Volume = 50,
+        Theme
     }) {
 
         this.position = this.getPosition(position);
         this.open = false;
-        this.BackgroundColor = BackgroundColor;
-        this.ButtonColor = ButtonColor;
-        this.ButtonShape = ButtonShape;
-        this.Img = Img;
-        this.Url = Url;
-        this.Id = HtmlId;
+        this.backgroundColor = BackgroundColor;
+        this.buttonColor = ButtonColor;
+        this.buttonShape = ButtonShape;
+        this.img = Img;
+        this.mode = Mode;
+        this.url = Url;
+        this.id = HtmlId;
+        this.theme = Theme;
         this.volume = Volume / 100;
         this.playing = "not playing";
         this.initialise();
@@ -38,11 +41,11 @@ export default class MediaPlayer {
 
     initialise() {
         console.log(`Currently have ${player.length + 1} playing`)
-        player.push({ volume: this.volume, playing: this.playing, butttonColor: this.ButtonColor, background: this.BackgroundColor, id: this.Id, media: this.Url })
+        player.push({ volume: this.volume, playing: this.playing, butttonColor: this.buttonColor, background: this.backgroundColor, id: this.id, media: this.url })
         saveToLocalStorage(player)
 
         this.howlPlayer = new Howl({
-            src: [this.Url],
+            src: [this.url],
             html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
             volume: this.volume,
             onend: function () {
@@ -52,11 +55,12 @@ export default class MediaPlayer {
                 //   this.play.classList.add('play');
             },
         });
-        const theDiv = document.getElementById(this.Id);
+        const theDiv = document.getElementById(this.id);
         const mediaPlayer = document.createElement('div');
         mediaPlayer.style.position = 'relative';
-        //  mediaPlayer.id = this.Id;
-        mediaPlayer.style.backgroundColor = this.BackgroundColor;
+        mediaPlayer.style.borderRadius = this.buttonShape === "rounded" ? '20px' : 0;
+        //  mediaPlayer.id = this.id;
+        mediaPlayer.style.backgroundColor = this.backgroundColor;
         mediaPlayer.classList.add('mediaPlayer');
 
         document.body.appendChild(theDiv);
@@ -64,14 +68,28 @@ export default class MediaPlayer {
 
         this.mediaContainer = document.createElement('div');
         this.mediaContainer.classList.add('mediaContainer');
-
-        this.createMediaContainerContent();
+        if (this.theme === "advance") {
+            this.advanceTheme();
+        } else {
+            this.simpleTheme()
+        }
 
         mediaPlayer.appendChild(this.mediaContainer);
 
     }
+    simpleTheme() {
+        this.mediaContainer.innerHTML = '';
 
-    createMediaContainerContent() {
+        const mediaSingle = document.createElement('div');
+        mediaSingle.classList.add('mediaSingle');
+
+
+        this.play = this.createBtn('play', this.play_btn.bind(this), mediaSingle)
+
+        this.mediaContainer.appendChild(mediaSingle);
+
+    }
+    advanceTheme() {
         this.mediaContainer.innerHTML = '';
 
         const mediaTop = document.createElement('div');
@@ -138,7 +156,7 @@ export default class MediaPlayer {
 
     createBtn(newClass, func, appender, updateClass) {
         const btn = document.createElement('span');
-        btn.style.backgroundColor = this.ButtonColor;
+        btn.style.backgroundColor = this.buttonColor;
         btn.id = newClass;
         btn.addEventListener('click', func);
         btn.classList.add(newClass, updateClass)
@@ -150,23 +168,34 @@ export default class MediaPlayer {
         //  this.howlPlayer.s()
     }
     play_btn() {
-        console.log("playing ")
 
         this.open = !this.open;
         if (this.open) {
+            console.log("play ")
             this.howlPlayer.play()
             this.play.classList.remove('play');
             this.play.classList.add('pause');
             this.playing = "playing";
-            updatePlay(this.playing, this.Id)
-            this.volume = setVolume(this.Id)
-            console.log(this.volume, this.Id)
+            updatePlay(this.playing, this.id)
+            this.volume = setVolume(this.id)
+            console.log(this.volume, this.id)
+            if (this.mode === "" || !this.mode) {
+                if (getId(this.id) == true) {
+                    //do nothing
+                    console.log("playing, ///" + this.id)
+                } else {
+                    //pause others, pause function
+                    console.log("paused,/// ")
+
+                }
+            }
         } else {
+            console.log("pause ")
             this.howlPlayer.pause()
             this.play.classList.add('play');
             this.play.classList.remove('pause');
             this.playing = "paused"
-            updatePlay(this.playing, this.Id)
+            updatePlay(this.playing, this.id)
         }
     }
 

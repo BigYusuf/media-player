@@ -20,6 +20,7 @@ return /******/ (() => { // webpackBootstrap
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getId: () => (/* binding */ getId),
 /* harmony export */   saveToLocalStorage: () => (/* binding */ saveToLocalStorage),
 /* harmony export */   setVolume: () => (/* binding */ setVolume),
 /* harmony export */   updatePlay: () => (/* binding */ updatePlay)
@@ -76,6 +77,24 @@ var setVolume = function setVolume(id) {
     return 0;
   }
 };
+var getId = function getId(id) {
+  var retrievedString = localStorage.getItem("player");
+  var parsedObject = JSON.parse(retrievedString);
+
+  // check id && playing
+  var playedAudio = parsedObject.filter(function (x) {
+    return x.id === id && x.playing === "playing";
+  });
+  // let othersAudio = parsedObject.filter((x) => x.id !== id)
+
+  console.log(parsedObject);
+  localStorage.setItem('player', JSON.stringify(parsedObject));
+  if (playedAudio) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 /***/ }),
 
@@ -113,7 +132,7 @@ var MediaPlayer = /*#__PURE__*/function () {
       _ref$ButtonColor = _ref.ButtonColor,
       ButtonColor = _ref$ButtonColor === void 0 ? "white" : _ref$ButtonColor,
       _ref$ButtonShape = _ref.ButtonShape,
-      ButtonShape = _ref$ButtonShape === void 0 ? "rounded-square" : _ref$ButtonShape,
+      ButtonShape = _ref$ButtonShape === void 0 ? "rounded" : _ref$ButtonShape,
       _ref$Mode = _ref.Mode,
       Mode = _ref$Mode === void 0 ? "normal" : _ref$Mode,
       _ref$Img = _ref.Img,
@@ -123,16 +142,19 @@ var MediaPlayer = /*#__PURE__*/function () {
       _ref$HtmlId = _ref.HtmlId,
       HtmlId = _ref$HtmlId === void 0 ? "player1" : _ref$HtmlId,
       _ref$Volume = _ref.Volume,
-      Volume = _ref$Volume === void 0 ? 50 : _ref$Volume;
+      Volume = _ref$Volume === void 0 ? 50 : _ref$Volume,
+      Theme = _ref.Theme;
     _classCallCheck(this, MediaPlayer);
     this.position = this.getPosition(position);
     this.open = false;
-    this.BackgroundColor = BackgroundColor;
-    this.ButtonColor = ButtonColor;
-    this.ButtonShape = ButtonShape;
-    this.Img = Img;
-    this.Url = Url;
-    this.Id = HtmlId;
+    this.backgroundColor = BackgroundColor;
+    this.buttonColor = ButtonColor;
+    this.buttonShape = ButtonShape;
+    this.img = Img;
+    this.mode = Mode;
+    this.url = Url;
+    this.id = HtmlId;
+    this.theme = Theme;
     this.volume = Volume / 100;
     this.playing = "not playing";
     this.initialise();
@@ -154,14 +176,14 @@ var MediaPlayer = /*#__PURE__*/function () {
       player.push({
         volume: this.volume,
         playing: this.playing,
-        butttonColor: this.ButtonColor,
-        background: this.BackgroundColor,
-        id: this.Id,
-        media: this.Url
+        butttonColor: this.buttonColor,
+        background: this.backgroundColor,
+        id: this.id,
+        media: this.url
       });
       (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.saveToLocalStorage)(player);
       this.howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
-        src: [this.Url],
+        src: [this.url],
         html5: true,
         // Force to HTML5 so that the audio can stream in (best for large files).
         volume: this.volume,
@@ -172,22 +194,36 @@ var MediaPlayer = /*#__PURE__*/function () {
           //   this.play.classList.add('play');
         }
       });
-      var theDiv = document.getElementById(this.Id);
+      var theDiv = document.getElementById(this.id);
       var mediaPlayer = document.createElement('div');
       mediaPlayer.style.position = 'relative';
-      //  mediaPlayer.id = this.Id;
-      mediaPlayer.style.backgroundColor = this.BackgroundColor;
+      mediaPlayer.style.borderRadius = this.buttonShape === "rounded" ? '20px' : 0;
+      //  mediaPlayer.id = this.id;
+      mediaPlayer.style.backgroundColor = this.backgroundColor;
       mediaPlayer.classList.add('mediaPlayer');
       document.body.appendChild(theDiv);
       theDiv.appendChild(mediaPlayer);
       this.mediaContainer = document.createElement('div');
       this.mediaContainer.classList.add('mediaContainer');
-      this.createMediaContainerContent();
+      if (this.theme === "advance") {
+        this.advanceTheme();
+      } else {
+        this.simpleTheme();
+      }
       mediaPlayer.appendChild(this.mediaContainer);
     }
   }, {
-    key: "createMediaContainerContent",
-    value: function createMediaContainerContent() {
+    key: "simpleTheme",
+    value: function simpleTheme() {
+      this.mediaContainer.innerHTML = '';
+      var mediaSingle = document.createElement('div');
+      mediaSingle.classList.add('mediaSingle');
+      this.play = this.createBtn('play', this.play_btn.bind(this), mediaSingle);
+      this.mediaContainer.appendChild(mediaSingle);
+    }
+  }, {
+    key: "advanceTheme",
+    value: function advanceTheme() {
       this.mediaContainer.innerHTML = '';
       var mediaTop = document.createElement('div');
       mediaTop.classList.add('mediaTop');
@@ -241,7 +277,7 @@ var MediaPlayer = /*#__PURE__*/function () {
     key: "createBtn",
     value: function createBtn(newClass, func, appender, updateClass) {
       var btn = document.createElement('span');
-      btn.style.backgroundColor = this.ButtonColor;
+      btn.style.backgroundColor = this.buttonColor;
       btn.id = newClass;
       btn.addEventListener('click', func);
       btn.classList.add(newClass, updateClass);
@@ -256,22 +292,32 @@ var MediaPlayer = /*#__PURE__*/function () {
   }, {
     key: "play_btn",
     value: function play_btn() {
-      console.log("playing ");
       this.open = !this.open;
       if (this.open) {
+        console.log("play ");
         this.howlPlayer.play();
         this.play.classList.remove('play');
         this.play.classList.add('pause');
         this.playing = "playing";
-        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.Id);
-        this.volume = (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.setVolume)(this.Id);
-        console.log(this.volume, this.Id);
+        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.id);
+        this.volume = (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.setVolume)(this.id);
+        console.log(this.volume, this.id);
+        if (this.mode === "" || !this.mode) {
+          if ((0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.getId)(this.id) == true) {
+            //do nothing
+            console.log("playing, ///" + this.id);
+          } else {
+            //pause others, pause function
+            console.log("paused,/// ");
+          }
+        }
       } else {
+        console.log("pause ");
         this.howlPlayer.pause();
         this.play.classList.add('play');
         this.play.classList.remove('pause');
         this.playing = "paused";
-        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.Id);
+        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.id);
       }
     }
   }, {
@@ -348,77 +394,6 @@ var MediaPlayer = /*#__PURE__*/function () {
 
 /***/ }),
 
-/***/ "./src/cat.js":
-/*!********************!*\
-  !*** ./src/cat.js ***!
-  \********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Cat)
-/* harmony export */ });
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var Cat = /*#__PURE__*/function () {
-  function Cat() {
-    _classCallCheck(this, Cat);
-    this._name = 'Cat';
-  }
-  return _createClass(Cat, [{
-    key: "name",
-    get: function get() {
-      return this._name;
-    }
-  }]);
-}();
-
-
-/***/ }),
-
-/***/ "./src/dog.ts":
-/*!********************!*\
-  !*** ./src/dog.ts ***!
-  \********************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Dog)
-/* harmony export */ });
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
-var Dog = /*#__PURE__*/function () {
-  function Dog() {
-    _classCallCheck(this, Dog);
-    _defineProperty(this, "_name", void 0);
-    this._name = "Dog";
-  }
-  return _createClass(Dog, [{
-    key: "name",
-    get: function get() {
-      return this._name;
-    }
-  }], [{
-    key: "oneThird",
-    get: function get() {
-      return 3.0 / 1.0;
-    }
-  }]);
-}();
-
-
-/***/ }),
-
 /***/ "./src/styles.js":
 /*!***********************!*\
   !*** ./src/styles.js ***!
@@ -430,7 +405,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   styles: () => (/* binding */ styles)
 /* harmony export */ });
-var styles = "\n.mediaPlayer {\n    height: auto;\n    width: 500px;\n    }\n\n.mediaContainer {\n    position: relative;\n    display: flex;\n    margin: 0 auto;\n    width: 100%;\n    align-items: center;\n    justify-content: center;\n    flex-direction: column;\n    gap: 20px;\n    padding: 20px 0;\n}\n\n.mediaTop {\n    flex: 1;\n}\n\n.mediaTop .title {\n    color: white;\n}\n\n.mediaMiddle {\n    flex: 3;\n    display: flex;\n    flex-direction: row;\n    gap: 20px;\n}\n\n.mediaBottom {\n    flex: 1;\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: center;\n    gap: 10px;\n}\n\n.playControl {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.playControl button img {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n}\n\n.mediaSeek {}\n\n/*both range slider*/\ninput[type=\"range\"] {\n    -webkit-appearance: none;\n    width: 200px;\n    outline: none;\n    height: 2px;\n    margin: 0 15px;\n}\n\ninput[type=\"range\"]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    height: 15px;\n    width: 3px;\n    background-color: rgb(84, 216, 75);\n    /* border-radius: 50%;*/\n    cursor: pointer;\n}\n\n        \n.play,\n.pause,\n.next,\n.prev,\n.volumeOff,\n.volumeUp,\n.loop {\n    cursor: pointer;\n    display: inline-block;\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-size: 100% 100%;\n    mask-size: 100% 100%;\n}\n.play {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.pause {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.next {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.prev {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.loop {\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeUp {\n    margin-left: 10px;\n    width: 1.1em;\n    height: 1.1em;\n    font-size: 1.1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeOff {\n    margin-left: 10px;\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n";
+var styles = "\n.mediaPlayer {\n    height: auto;\n    width: 100%;\n    }\n\n.mediaContainer {\n    position: relative;\n    display: flex;\n    margin: 0 auto;\n    width: 100%;\n    align-items: center;\n    justify-content: center;\n    flex-direction: column;\n    gap: 20px;\n    padding: 20px 0;\n}\n\n.mediaTop {\n    flex: 1;\n}\n\n.mediaTop .title {\n    color: white;\n}\n\n.mediaMiddle {\n    flex: 3;\n    display: flex;\n    flex-direction: row;\n    gap: 20px;\n}\n\n.mediaBottom {\n    flex: 1;\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: center;\n    gap: 10px;\n}\n\n.mediaSingle {\n    flex: 1;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    border-radius: 50%;\n}\n\n.playControl {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.playControl button img {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n}\n\n.mediaSeek {}\n\n/*both range slider*/\ninput[type=\"range\"] {\n    -webkit-appearance: none;\n    width: 200px;\n    outline: none;\n    height: 2px;\n    margin: 0 15px;\n}\n\ninput[type=\"range\"]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    height: 15px;\n    width: 3px;\n    background-color: rgb(84, 216, 75);\n    /* border-radius: 50%;*/\n    cursor: pointer;\n}\n\n        \n.play,\n.pause,\n.next,\n.prev,\n.volumeOff,\n.volumeUp,\n.loop {\n    cursor: pointer;\n    display: inline-block;\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-size: 100% 100%;\n    mask-size: 100% 100%;\n}\n.play {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.pause {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.next {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.prev {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.loop {\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeUp {\n    margin-left: 10px;\n    width: 1.1em;\n    height: 1.1em;\n    font-size: 1.1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeOff {\n    margin-left: 10px;\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n";
 
 /***/ }),
 
@@ -3784,18 +3759,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _MediaPlayer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MediaPlayer.js */ "./src/MediaPlayer.js");
-/* harmony import */ var _cat_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./cat.js */ "./src/cat.js");
-/* harmony import */ var _dog_ts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./dog.ts */ "./src/dog.ts");
-
-
+/* harmony import */ var _MediaPlayer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MediaPlayer */ "./src/MediaPlayer.js");
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  Dog: _dog_ts__WEBPACK_IMPORTED_MODULE_2__["default"],
-  Cat: _cat_js__WEBPACK_IMPORTED_MODULE_1__["default"],
-  MediaPlayer: _MediaPlayer_js__WEBPACK_IMPORTED_MODULE_0__["default"]
+  MediaPlayer: _MediaPlayer__WEBPACK_IMPORTED_MODULE_0__["default"]
 });
-console.log("Hello world from the bundle!");
+console.log("Media Player Active!");
 })();
 
 __webpack_exports__ = __webpack_exports__["default"];

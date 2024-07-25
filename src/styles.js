@@ -1,7 +1,7 @@
 export const styles = `
 .mediaPlayer {
     height: auto;
-    width: 500px;
+    width: 100%;
     }
 
 .mediaContainer {
@@ -38,6 +38,14 @@ export const styles = `
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+.mediaSingle {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 }
 
 .playControl {

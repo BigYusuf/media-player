@@ -4,34 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Webpack & TypeScript</title>
-
+  <style>
+    .player {
+      height: auto;
+      width: 500px;
+    }
+    .player2 {
+      height: 100px;
+      width: 100px;
+    }
+  </style>
 </head>
 
 <body>
   <div>
 
-    <div id="test1"> </div>
+    <div id="test1" class="player"> </div>
   </div>
 
-  <div id="">
-    <table>
-      <tr>
-        <th>h1</th>
-        <th>h2</th>
-        <th>h3</th>
-        <th>h4</th>
-      </tr>
-      <tr>
-        <td>1</td>
-        <td>1</td>
-        <td>1</td>
-        <td>2</td>
-      </tr>
-    </table>
-  </div>
-  <div id="test2"> </div>
-  <div id="test3"> </div>
-  <div id="test4"> </div>
+  <div id="test2" class="player"> </div>
+  <div id="test3" class="player2"> </div>
+  <div id="test4" class="player2"> </div>
   <!-- add scripts here -->
 
   <!--<script src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/dist/media-player.js"></script>-->
@@ -42,18 +35,18 @@
         BackgroundColor: "green",
         Url: "./audio/3.mp3",
         HtmlId: "test1",
-        //Mode,
-        //PlayerStyle
+        Theme: "advance"
       });
 
       new window["media-player"].MediaPlayer({
         BackgroundColor: "red",
         Url: "./audio/2.mp3",
-        HtmlId: "test2"
+        HtmlId: "test2",
+        Theme: "advance"
       });
       new window["media-player"].MediaPlayer({
         BackgroundColor: "blue",
-        Url: "https://freesound.org/people/josefpres/sounds/744090/",
+        Url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
         HtmlId: "test3",
       });
       // console.log(dog.name, window["media-player"].Dog.oneThird);
@@ -68,7 +61,6 @@
         HtmlId: "test4",
       });
     });
-    //console.log(window["media-player"].Dog.oneThird);
   </script>
 </body>
 
