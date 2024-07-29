@@ -20,11 +20,11 @@ let progress: any = document.getElementById("progress");
 let index = 0;
 
 function MediaPlayer({
-  playControlPosition = "bottom-right",
+  playControlPosition,
   playControlValues = ["20px", "20px"],
-  otherControlPosition = "top-right",
+  otherControlPosition,
   otherControlValues = ["20px", "20px"],
-  mediaSeekPosition = "top-right",
+  mediaSeekPosition,
   mediaSeekValues = ["20px", "20px"],
   backgroundColor = "black",
   title = "Media Player",
