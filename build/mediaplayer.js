@@ -135,16 +135,13 @@ var duration = document.getElementById("duration");
 var progress = document.getElementById("progress");
 var index = 0;
 function MediaPlayer(_ref) {
-  var _ref$playControlPosit = _ref.playControlPosition,
-    playControlPosition = _ref$playControlPosit === void 0 ? "bottom-right" : _ref$playControlPosit,
+  var playControlPosition = _ref.playControlPosition,
     _ref$playControlValue = _ref.playControlValues,
     playControlValues = _ref$playControlValue === void 0 ? ["20px", "20px"] : _ref$playControlValue,
-    _ref$otherControlPosi = _ref.otherControlPosition,
-    otherControlPosition = _ref$otherControlPosi === void 0 ? "top-right" : _ref$otherControlPosi,
+    otherControlPosition = _ref.otherControlPosition,
     _ref$otherControlValu = _ref.otherControlValues,
     otherControlValues = _ref$otherControlValu === void 0 ? ["20px", "20px"] : _ref$otherControlValu,
-    _ref$mediaSeekPositio = _ref.mediaSeekPosition,
-    mediaSeekPosition = _ref$mediaSeekPositio === void 0 ? "top-right" : _ref$mediaSeekPositio,
+    mediaSeekPosition = _ref.mediaSeekPosition,
     _ref$mediaSeekValues = _ref.mediaSeekValues,
     mediaSeekValues = _ref$mediaSeekValues === void 0 ? ["20px", "20px"] : _ref$mediaSeekValues,
     _ref$backgroundColor = _ref.backgroundColor,
