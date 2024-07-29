@@ -25,16 +25,16 @@ if (env === "build") {
 
 const config = {
   mode: mode,
-  entry: __dirname + "/src/index.js",
+  entry: __dirname + "/src/index.ts",
   devtool: "source-map",
   output: {
-    path: __dirname + "/dist",
+    path: __dirname + "/build",
     filename: outputFile,
-    library: libraryName,
-    libraryTarget: shouldExportToAMD ? "amd" : "umd",
-    libraryExport: "default",
-    umdNamedDefine: true,
-    globalObject: "typeof self !== 'undefined' ? self : this",
+    library: "AudioPlayer",
+    libraryTarget: "umd",
+    //libraryExport: "default",
+  //  umdNamedDefine: true,
+//    globalObject: "typeof self !== 'undefined' ? self : this",
   },
   module: {
     rules: [
@@ -49,7 +49,7 @@ const config = {
   },
   resolve: {
     modules: [path.resolve("./node_modules"), path.resolve("./src")],
-    extensions: [".json", ".js"],
+    extensions: [".json", ".js", ".ts"],
   },
 };
 

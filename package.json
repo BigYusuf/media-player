@@ -1,8 +1,8 @@
 {
-  "name": "media-player",
+  "name": "mediaplayer",
   "version": "1.0.0",
-  "description": "Produce universal library with webpack and es6",
-  "main": "dist/media-player.js",
+  "description": "Produce mediaplayer library with webpack and es6",
+  "main": "build/mediaplayer.js",
   "scripts": {
     "dev": "webpack --progress --watch --env dev",
     "dev-amd": "webpack --progress --watch --env dev --amd",
