@@ -4,23 +4,24 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["media-player"] = factory();
+		exports["AudioPlayer"] = factory();
 	else
-		root["media-player"] = factory();
+		root["AudioPlayer"] = factory();
 })(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/MediaController.js":
-/*!********************************!*\
-  !*** ./src/MediaController.js ***!
-  \********************************/
+/***/ "./src/controller/mediaController.ts":
+/*!*******************************************!*\
+  !*** ./src/controller/mediaController.ts ***!
+  \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   getId: () => (/* binding */ getId),
+/* harmony export */   isArray: () => (/* binding */ isArray),
 /* harmony export */   saveToLocalStorage: () => (/* binding */ saveToLocalStorage),
 /* harmony export */   setVolume: () => (/* binding */ setVolume),
 /* harmony export */   updatePlay: () => (/* binding */ updatePlay)
@@ -33,7 +34,7 @@ var saveToLocalStorage = function saveToLocalStorage(data) {
   });
 
   //push the data to an array in localstorage
-  localStorage.setItem('player', JSON.stringify(data));
+  localStorage.setItem("player", JSON.stringify(data));
 };
 var updatePlay = function updatePlay(playing, id) {
   var retrievedString = localStorage.getItem("player");
@@ -43,7 +44,7 @@ var updatePlay = function updatePlay(playing, id) {
   });
   playedAudio[0].playing = playing;
   // console.log(parsedObject)
-  localStorage.setItem('player', JSON.stringify(parsedObject));
+  localStorage.setItem("player", JSON.stringify(parsedObject));
 };
 //we can always manipute the player based on its data
 
@@ -68,7 +69,7 @@ var setVolume = function setVolume(id) {
     othersAudio[i].volume = 0.5;
   }
   console.log(parsedObject);
-  localStorage.setItem('player', JSON.stringify(parsedObject));
+  localStorage.setItem("player", JSON.stringify(parsedObject));
 
   //mode= volumeincrease
   if (id === playedAudio[0].id) {
@@ -88,315 +89,398 @@ var getId = function getId(id) {
   // let othersAudio = parsedObject.filter((x) => x.id !== id)
 
   console.log(parsedObject);
-  localStorage.setItem('player', JSON.stringify(parsedObject));
+  localStorage.setItem("player", JSON.stringify(parsedObject));
   if (playedAudio) {
     return true;
   } else {
     return false;
   }
 };
+var isArray = function isArray(data) {
+  if (Array.isArray(data)) {
+    return true;
+  } else {
+    false;
+  }
+};
 
 /***/ }),
 
-/***/ "./src/MediaPlayer.js":
-/*!****************************!*\
-  !*** ./src/MediaPlayer.js ***!
-  \****************************/
+/***/ "./src/controller/mediaPlayer.ts":
+/*!***************************************!*\
+  !*** ./src/controller/mediaPlayer.ts ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ MediaPlayer)
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! howler */ "./node_modules/howler/dist/howler.js");
 /* harmony import */ var howler__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(howler__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles */ "./src/styles.js");
-/* harmony import */ var _MediaController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MediaController */ "./src/MediaController.js");
-function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
-function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
-function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == typeof i ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != typeof t || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != typeof i) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+/* harmony import */ var _styles__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./styles */ "./src/controller/styles.ts");
+/* harmony import */ var _mediaController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mediaController */ "./src/controller/mediaController.ts");
 
 
 
 var player = [];
-//console.log("Player is hot and ready to role")
-var MediaPlayer = /*#__PURE__*/function () {
-  function MediaPlayer(_ref) {
-    var _ref$position = _ref.position,
-      position = _ref$position === void 0 ? 'bottom-right' : _ref$position,
-      _ref$BackgroundColor = _ref.BackgroundColor,
-      BackgroundColor = _ref$BackgroundColor === void 0 ? "black" : _ref$BackgroundColor,
-      _ref$ButtonColor = _ref.ButtonColor,
-      ButtonColor = _ref$ButtonColor === void 0 ? "white" : _ref$ButtonColor,
-      _ref$ButtonShape = _ref.ButtonShape,
-      ButtonShape = _ref$ButtonShape === void 0 ? "rounded" : _ref$ButtonShape,
-      _ref$Mode = _ref.Mode,
-      Mode = _ref$Mode === void 0 ? "normal" : _ref$Mode,
-      _ref$Img = _ref.Img,
-      Img = _ref$Img === void 0 ? "./assets/img1.png" : _ref$Img,
-      _ref$Url = _ref.Url,
-      Url = _ref$Url === void 0 ? "./audio/1.mp3" : _ref$Url,
-      _ref$HtmlId = _ref.HtmlId,
-      HtmlId = _ref$HtmlId === void 0 ? "player1" : _ref$HtmlId,
-      _ref$Volume = _ref.Volume,
-      Volume = _ref$Volume === void 0 ? 50 : _ref$Volume,
-      Theme = _ref.Theme;
-    _classCallCheck(this, MediaPlayer);
-    this.position = this.getPosition(position);
-    this.open = false;
-    this.backgroundColor = BackgroundColor;
-    this.buttonColor = ButtonColor;
-    this.buttonShape = ButtonShape;
-    this.img = Img;
-    this.mode = Mode;
-    this.url = Url;
-    this.id = HtmlId;
-    this.theme = Theme;
-    this.volume = Volume / 100;
-    this.playing = "not playing";
-    this.initialise();
-    this.createStyles();
+var mute = false;
+var loop = false;
+var isplayed = false;
+var durationSlider;
+var playing = "not playing";
+var play_btn = document.getElementById("play");
+var duration = document.getElementById("duration");
+var progress = document.getElementById("progress");
+var index = 0;
+function MediaPlayer(_ref) {
+  var _ref$playControlPosit = _ref.playControlPosition,
+    playControlPosition = _ref$playControlPosit === void 0 ? "bottom-right" : _ref$playControlPosit,
+    _ref$playControlValue = _ref.playControlValues,
+    playControlValues = _ref$playControlValue === void 0 ? ["20px", "20px"] : _ref$playControlValue,
+    _ref$otherControlPosi = _ref.otherControlPosition,
+    otherControlPosition = _ref$otherControlPosi === void 0 ? "top-right" : _ref$otherControlPosi,
+    _ref$otherControlValu = _ref.otherControlValues,
+    otherControlValues = _ref$otherControlValu === void 0 ? ["20px", "20px"] : _ref$otherControlValu,
+    _ref$mediaSeekPositio = _ref.mediaSeekPosition,
+    mediaSeekPosition = _ref$mediaSeekPositio === void 0 ? "top-right" : _ref$mediaSeekPositio,
+    _ref$mediaSeekValues = _ref.mediaSeekValues,
+    mediaSeekValues = _ref$mediaSeekValues === void 0 ? ["20px", "20px"] : _ref$mediaSeekValues,
+    _ref$backgroundColor = _ref.backgroundColor,
+    backgroundColor = _ref$backgroundColor === void 0 ? "black" : _ref$backgroundColor,
+    _ref$title = _ref.title,
+    title = _ref$title === void 0 ? "Media Player" : _ref$title,
+    _ref$buttonColor = _ref.buttonColor,
+    buttonColor = _ref$buttonColor === void 0 ? "white" : _ref$buttonColor,
+    _ref$buttonShape = _ref.buttonShape,
+    buttonShape = _ref$buttonShape === void 0 ? "rounded" : _ref$buttonShape,
+    _ref$mode = _ref.mode,
+    mode = _ref$mode === void 0 ? "normal" : _ref$mode,
+    _ref$img = _ref.img,
+    img = _ref$img === void 0 ? "" : _ref$img,
+    _ref$url = _ref.url,
+    url = _ref$url === void 0 ? "./audio/1.mp3" : _ref$url,
+    _ref$htmlId = _ref.htmlId,
+    htmlId = _ref$htmlId === void 0 ? "player1" : _ref$htmlId,
+    _ref$volume = _ref.volume,
+    volume = _ref$volume === void 0 ? 50 : _ref$volume,
+    theme = _ref.theme;
+  createStyles();
+  console.log("Currently have " + (player.length + 1) + " playing");
+  player.push({
+    volume: volume / 100,
+    playing: playing,
+    buttonColor: buttonColor,
+    backgroundColor: backgroundColor,
+    id: htmlId,
+    media: url
+  });
+  (0,_mediaController__WEBPACK_IMPORTED_MODULE_2__.saveToLocalStorage)(player);
+  //check if array
+  var howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
+    src: (0,_mediaController__WEBPACK_IMPORTED_MODULE_2__.isArray)(url) ? url : [url],
+    volume: volume / 100,
+    onplay: function onplay() {
+      // Display the duration.
+      duration.innerHTML = formatTime(Math.round(howlPlayer.duration()));
+      // Start updating the progress of the track.
+      function step() {
+        // Determine our current seek position.
+        var seek = howlPlayer.seek() || 0;
+        progress.innerHTML = formatTime(Math.round(seek));
+        durationSlider.value = "" + seek / howlPlayer.duration() * 100 || "0";
+        // If the sound is still playing, continue stepping.
+        if (howlPlayer.playing()) {
+          requestAnimationFrame(step);
+        }
+      }
+      requestAnimationFrame(step);
+    },
+    onend: function onend() {
+      // Change pause to play.
+      play_btn.classList.add("play");
+      play_btn.classList.remove("pause");
+    },
+    onseek: function onseek() {
+      // Start updating the progress of the track. function step() {
+      function step() {
+        // Determine our current seek position.
+        var seek = howlPlayer.seek() || 0;
+        progress.innerHTML = formatTime(Math.round(seek));
+        durationSlider.value = "" + seek / howlPlayer.duration() * 100 || "0";
+        // If the sound is still playing, continue stepping.
+        if (howlPlayer.playing()) {
+          requestAnimationFrame(step);
+        }
+      }
+      requestAnimationFrame(step);
+    }
+  });
+  var mediaPlayer = document.createElement("div");
+  mediaPlayer.style.position = "relative";
+  mediaPlayer.style.borderRadius = buttonShape === "rounded" ? "20px" : "0px";
+  mediaPlayer.style.backgroundColor = backgroundColor;
+  mediaPlayer.classList.add("mediaPlayer");
+  var myID = document.getElementById(htmlId);
+  myID.appendChild(mediaPlayer);
+  var mediaContainer = document.createElement("div");
+  mediaContainer.classList.add("mediaContainer");
+  if (theme === "advance") {
+    advanceTheme(buttonColor, mediaContainer, howlPlayer, img, title, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues);
+  } else {
+    simpleTheme(buttonColor, mediaContainer, howlPlayer);
   }
-  return _createClass(MediaPlayer, [{
-    key: "getPosition",
-    value: function getPosition(position) {
-      var _ref2;
-      var _position$split = position.split('-'),
-        vertical = _position$split[0],
-        horizontal = _position$split[1];
-      return _ref2 = {}, _ref2[vertical] = '30px', _ref2[horizontal] = '30px', _ref2;
+  mediaPlayer.appendChild(mediaContainer);
+}
+var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer) {
+  console.log("simple");
+  mediaContainer.innerHTML = "";
+  var mediaSingle = document.createElement("div");
+  mediaSingle.classList.add("mediaSingle");
+  console.log(buttonColor);
+  var btn = document.createElement("div");
+  btn.style.backgroundColor = buttonColor;
+  btn.classList.add("play");
+  btn.id = "play";
+  play_btn = btn;
+  //  btn.onclick = playBtn(isplayed, howlPlayer, btn, playing);
+  btn.addEventListener("click", function () {
+    isplayed = !isplayed;
+    if (isplayed) {
+      console.log("play ");
+      howlPlayer.play();
+      btn.classList.remove("play");
+      btn.classList.add("pause");
+      playing = "playing";
+    } else {
+      console.log("pause ");
+      howlPlayer.pause();
+      btn.classList.add("play");
+      btn.classList.remove("pause");
+      playing = "paused";
     }
-  }, {
-    key: "initialise",
-    value: function initialise() {
-      console.log("Currently have " + (player.length + 1) + " playing");
-      player.push({
-        volume: this.volume,
-        playing: this.playing,
-        butttonColor: this.buttonColor,
-        background: this.backgroundColor,
-        id: this.id,
-        media: this.url
-      });
-      (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.saveToLocalStorage)(player);
-      this.howlPlayer = new howler__WEBPACK_IMPORTED_MODULE_0__.Howl({
-        src: [this.url],
-        // html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
-        volume: this.volume,
-        onend: function onend() {
-          // Change pause to play.
+  });
+  mediaSingle.appendChild(btn);
+  mediaContainer.appendChild(mediaSingle);
+};
+var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer, img, titleValue, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues) {
+  console.log("adv");
+  mediaContainer.innerHTML = "";
+  var mediaTop = document.createElement("div");
+  mediaTop.classList.add("mediaTop");
+  var title = document.createElement("h2");
+  title.classList.add("title");
+  title.textContent = titleValue;
+  mediaTop.appendChild(title);
+  var mediaMiddle = document.createElement("div");
+  mediaMiddle.classList.add("mediaMiddle");
+  var mediaLibrary = document.createElement("div");
+  if (img == "hide" || img == "hidden") {
+    mediaLibrary.style.display = "none";
+  } else if (img == "" || !img) {
+    mediaLibrary.style.borderRadius = "50%";
+    mediaLibrary.style.padding = "24px";
+    mediaLibrary.style.border = "1px solid " + buttonColor;
+  }
+  mediaLibrary.classList.add("mediaLibrary");
+  mediaMiddle.appendChild(mediaLibrary);
+  var playerImg;
+  if (img == "" || !img) {
+    playerImg = document.createElement("span");
+    playerImg.classList.add("musicImg");
+    playerImg.style.backgroundColor = buttonColor;
+    mediaLibrary.appendChild(playerImg);
+  } else {
+    playerImg = document.createElement("img");
+    playerImg.src = img;
+    mediaLibrary.appendChild(playerImg);
+  }
+  var mediaBottom = document.createElement("div");
+  mediaBottom.classList.add("mediaBottom");
+  var playControl = document.createElement("div");
+  playControl.classList.add("playControl");
+  if (playControlPosition === "hidden" || playControlPosition == "hide") {
+    playControl.style.display = "none";
+  } else if (playControlPosition !== "") {
+    var position = getPosition(playControlPosition, playControlValues);
+    playControl.style.position = "absolute";
+    Object.keys(position).forEach(function (key) {
+      return playControl.style[key] = position[key];
+    });
+  }
+  var prev = document.createElement("div");
+  prev.style.backgroundColor = buttonColor;
+  prev.classList.add("prev");
+  prev.id = "prev";
+  prev.addEventListener("click", function () {
+    //prev
+    console.log("prev");
+    index = index - 1;
+    if (index < 0) {
+      // index = playlist.length - 1;
+    }
+  });
+  playControl.appendChild(prev);
+  var play = document.createElement("div");
+  play.style.backgroundColor = buttonColor;
+  play.classList.add("play");
+  play.id = "play";
+  play_btn = play;
+  play.addEventListener("click", function () {
+    isplayed = !isplayed;
+    if (isplayed) {
+      console.log("play ");
+      howlPlayer.play();
+      play.classList.remove("play");
+      play.classList.add("pause");
+      playing = "playing";
+    } else {
+      console.log("pause ");
+      howlPlayer.pause();
+      play.classList.add("play");
+      play.classList.remove("pause");
+      playing = "paused";
+    }
+  });
+  playControl.appendChild(play);
+  var next = document.createElement("div");
+  next.style.backgroundColor = buttonColor;
+  next.classList.add("next");
+  next.id = "next";
+  next.addEventListener("click", function () {
+    // Get the next track based on the direction of the track.
+    index = index + 1;
+    //   if (index >= playlist.length) {
+    //   index = 0;
+    // }
 
-          //   this.play.classList.remove('pause');
-          //   this.play.classList.add('play');
-        }
-      });
-      var theDiv = document.getElementById(this.id);
-      var mediaPlayer = document.createElement('div');
-      mediaPlayer.style.position = 'relative';
-      mediaPlayer.style.borderRadius = this.buttonShape === "rounded" ? '20px' : 0;
-      //  mediaPlayer.id = this.id;
-      mediaPlayer.style.backgroundColor = this.backgroundColor;
-      mediaPlayer.classList.add('mediaPlayer');
-      document.body.appendChild(theDiv);
-      theDiv.appendChild(mediaPlayer);
-      this.mediaContainer = document.createElement('div');
-      this.mediaContainer.classList.add('mediaContainer');
-      if (this.theme === "advance") {
-        this.advanceTheme();
-      } else {
-        this.simpleTheme();
-      }
-      mediaPlayer.appendChild(this.mediaContainer);
-    }
-  }, {
-    key: "simpleTheme",
-    value: function simpleTheme() {
-      this.mediaContainer.innerHTML = '';
-      var mediaSingle = document.createElement('div');
-      mediaSingle.classList.add('mediaSingle');
-      this.play = this.createBtn('play', this.play_btn.bind(this), mediaSingle);
-      this.mediaContainer.appendChild(mediaSingle);
-    }
-  }, {
-    key: "advanceTheme",
-    value: function advanceTheme() {
-      this.mediaContainer.innerHTML = '';
-      var mediaTop = document.createElement('div');
-      mediaTop.classList.add('mediaTop');
-      var title = document.createElement('h2');
-      title.classList.add('title');
-      title.textContent = "Media Player";
-      mediaTop.appendChild(title);
-      var mediaMiddle = document.createElement('div');
-      mediaMiddle.classList.add('mediaMiddle');
-      var mediaLibrary = document.createElement('div');
-      mediaLibrary.classList.add('mediaLibrary');
-      mediaMiddle.appendChild(mediaLibrary);
-      var playerImg = document.createElement('img');
-      playerImg.src = this.Img;
-      mediaLibrary.appendChild(playerImg);
-      var mediaBottom = document.createElement('div');
-      mediaBottom.classList.add('mediaBottom');
-      var playControl = document.createElement('div');
-      playControl.classList.add('playControl');
-      this.createBtn('prev', this.prev_btn.bind(this), playControl);
-      this.play = this.createBtn('play', this.play_btn.bind(this), playControl);
-      this.createBtn('next', this.next_btn.bind(this), playControl);
-      this.volume = this.createBtn('volumeUp', this.vol_btn.bind(this), playControl);
-      this.createBtn('loop', this.loop_btn.bind(this), playControl);
-      var mediaSeek = document.createElement('div');
-      mediaSeek.classList.add('mediaSeek');
-      var durationSlider = document.createElement('input');
-      durationSlider.type = 'range';
-      durationSlider.id = 'duration_slider';
-      durationSlider.min = '0';
-      durationSlider.max = '100';
-      durationSlider.value = '0';
-      this.durationSlider = durationSlider;
-      durationSlider.addEventListener('change', this.duration_change.bind(this));
-      mediaSeek.appendChild(durationSlider);
-      mediaBottom.appendChild(playControl);
-      mediaBottom.appendChild(mediaSeek);
-      // function load the track
+    //self.skipTo(index);
 
-      this.load_track();
-      this.mediaContainer.appendChild(mediaTop);
-      this.mediaContainer.appendChild(mediaMiddle);
-      this.mediaContainer.appendChild(mediaBottom);
+    console.log("next");
+  });
+  playControl.appendChild(next);
+  var otherControl = document.createElement("div");
+  otherControl.classList.add("otherControl");
+  if (otherControlPosition === "hidden" || otherControlPosition == "hide") {
+    otherControl.style.display = "none";
+  } else if (otherControlPosition !== "") {
+    var _position = getPosition(otherControlPosition, otherControlValues);
+    otherControl.style.position = "absolute";
+    Object.keys(_position).forEach(function (key) {
+      return otherControl.style[key] = _position[key];
+    });
+  }
+  var vol = document.createElement("div");
+  vol.style.backgroundColor = buttonColor;
+  vol.classList.add("volumeUp");
+  vol.id = "vol";
+  vol.addEventListener("click", function () {
+    //vol
+    console.log("vol");
+    mute = !mute;
+    if (mute) {
+      howlPlayer.mute(true);
+      vol.classList.remove("volumeUp");
+      vol.classList.add("volumeOff");
+    } else {
+      howlPlayer.mute(false);
+      vol.classList.add("volumeUp");
+      vol.classList.remove("volumeOff");
     }
-  }, {
-    key: "load_track",
-    value: function load_track() {
-      this.durationSlider.value = this.howlPlayer.seek() / this.howlPlayer.duration() * 100;
+  });
+  otherControl.appendChild(vol);
+  var loop_ = document.createElement("div");
+  loop_.style.backgroundColor = buttonColor;
+  loop_.classList.add("loop");
+  loop_.id = "loop";
+  loop_.addEventListener("click", function () {
+    //loop
+    loop = !loop;
+    if (loop) {
+      howlPlayer.loop(true);
+      loop_.classList.remove("loop");
+      loop_.classList.add("loopOff");
+    } else {
+      howlPlayer.loop(false);
+      loop_.classList.add("loop");
+      loop_.classList.remove("loopOff");
     }
-  }, {
-    key: "createBtn",
-    value: function createBtn(newClass, func, appender, updateClass) {
-      var btn = document.createElement('span');
-      btn.style.backgroundColor = this.buttonColor;
-      btn.id = newClass;
-      btn.addEventListener('click', func);
-      btn.classList.add(newClass, updateClass);
-      return appender.appendChild(btn);
-    }
-  }, {
-    key: "prev_btn",
-    value: function prev_btn() {
-      console.log("prev");
-      //  this.howlPlayer.s()
-    }
-  }, {
-    key: "play_btn",
-    value: function play_btn() {
-      this.open = !this.open;
-      if (this.open) {
-        console.log("play ");
-        this.howlPlayer.play();
-        this.play.classList.remove('play');
-        this.play.classList.add('pause');
-        this.playing = "playing";
-        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.id);
-        this.volume = (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.setVolume)(this.id);
-        console.log(this.volume, this.id);
-        if (this.mode === "" || !this.mode) {
-          if ((0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.getId)(this.id) == true) {
-            //do nothing
-            console.log("playing, ///" + this.id);
-          } else {
-            //pause others, pause function
-            console.log("paused,/// ");
-          }
-        }
-      } else {
-        console.log("pause ");
-        this.howlPlayer.pause();
-        this.play.classList.add('play');
-        this.play.classList.remove('pause');
-        this.playing = "paused";
-        (0,_MediaController__WEBPACK_IMPORTED_MODULE_2__.updatePlay)(this.playing, this.id);
-      }
-    }
-  }, {
-    key: "range_slider",
-    value: function range_slider() {
-      var position = 0;
-
-      // update slider position
-      if (!this.howlPlayer.duration()) {
-        position = this.howlPlayer.seek() * (100 / this.howlPlayer.duration());
-        this.durationSlider.value = position;
-        console.log(position);
-      }
-    }
-  }, {
-    key: "next_btn",
-    value: function next_btn() {
-      console.log("next");
-    }
-  }, {
-    key: "vol_btn",
-    value: function vol_btn() {
-      console.log("vol");
-      this.mute = !this.mute;
-      if (this.mute) {
-        this.howlPlayer.mute(true);
-        this.volume.classList.remove('volumeUp');
-        this.volume.classList.add('volumeOff');
-      } else {
-        this.howlPlayer.mute(false);
-        this.volume.classList.add('volumeUp');
-        this.volume.classList.remove('volumeOff');
-      }
-    }
-  }, {
-    key: "loop_btn",
-    value: function loop_btn() {
-      console.log("loop");
-      this.loop = !this.loop;
-      if (this.mute) {
-        this.howlPlayer.loop(true);
-        this.volume.classList.remove('loop');
-        this.volume.classList.add('loopOff');
-      } else {
-        this.howlPlayer.loop(false);
-        this.volume.classList.add('loop');
-        this.volume.classList.remove('loopOff');
-      }
-    }
-  }, {
-    key: "duration_change",
-    value: function duration_change() {
-      var slider_position = this.howlPlayer.duration() * (this.durationSlider.value / 100);
-      this.howlPlayer.seek(slider_position);
-      // console.log("duration", this.durationSlider.value, 'dur', this.howlPlayer.duration())
-    }
-  }, {
-    key: "createStyles",
-    value: function createStyles() {
-      var styleTag = document.createElement('style');
-      styleTag.innerHTML = _styles__WEBPACK_IMPORTED_MODULE_1__.styles.replace(/^\s+|\n/gm, '');
-      document.head.appendChild(styleTag);
-    }
-  }, {
-    key: "formatTime",
-    value: function formatTime(secs) {
-      var minutes = Math.floor(secs / 60) || 0;
-      var seconds = secs - minutes * 60 || 0;
-      return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-    }
-  }]);
-}();
-
+  });
+  otherControl.appendChild(loop_);
+  var mediaSeek = document.createElement("div");
+  mediaSeek.classList.add("mediaSeek");
+  if (mediaSeekPosition === "hidden" || mediaSeekPosition == "hide") {
+    mediaSeek.style.display = "none";
+  } else if (mediaSeekPosition !== "") {
+    var _position2 = getPosition(mediaSeekPosition, mediaSeekValues);
+    mediaSeek.style.position = "absolute";
+    Object.keys(_position2).forEach(function (key) {
+      return mediaSeek.style[key] = _position2[key];
+    });
+  }
+  var timer = document.createElement("div");
+  timer.classList.add("timer");
+  timer.id = "timer";
+  var duration_ = document.createElement("div");
+  duration_.classList.add("duration");
+  duration_.id = "duration";
+  duration_.style.color = buttonColor;
+  duration_.innerHTML = formatTime(Math.round(howlPlayer.duration()));
+  duration = duration_;
+  var progress_ = document.createElement("div");
+  progress_.classList.add("progress");
+  progress_.id = "progress";
+  progress_.style.color = buttonColor;
+  progress_.innerHTML = "0:00";
+  progress = progress_;
+  var durationSlider_ = document.createElement("input");
+  durationSlider_.type = "range";
+  durationSlider_.id = "duration_slider";
+  durationSlider_.min = "0";
+  durationSlider_.max = "100";
+  durationSlider_.value = "0";
+  durationSlider = durationSlider_;
+  durationSlider_.addEventListener("change", function () {
+    var slider_position = howlPlayer.duration() * (durationSlider.value / 100);
+    howlPlayer.seek(slider_position);
+  });
+  timer.appendChild(progress_);
+  timer.appendChild(duration_);
+  mediaSeek.appendChild(timer);
+  mediaSeek.appendChild(durationSlider);
+  mediaBottom.appendChild(playControl);
+  mediaBottom.appendChild(otherControl);
+  mediaBottom.appendChild(mediaSeek);
+  mediaContainer.appendChild(mediaTop);
+  mediaContainer.appendChild(mediaMiddle);
+  mediaContainer.appendChild(mediaBottom);
+};
+function formatTime(secs) {
+  var minutes = Math.floor(secs / 60) || 0;
+  var seconds = secs - minutes * 60 || 0;
+  return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+}
+function createStyles() {
+  var styleTag = document.createElement("style");
+  styleTag.innerHTML = _styles__WEBPACK_IMPORTED_MODULE_1__.styles.replace(/^\s+|\n/gm, "");
+  document.head.appendChild(styleTag);
+}
+function getPosition(position, positionValues) {
+  var _ref2;
+  var _position$split = position == null ? void 0 : position.split("-"),
+    vertical = _position$split[0],
+    horizontal = _position$split[1];
+  return _ref2 = {}, _ref2[vertical] = positionValues ? positionValues[0] : "30px", _ref2[horizontal] = positionValues ? positionValues[1] : "30px", _ref2;
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MediaPlayer);
 
 /***/ }),
 
-/***/ "./src/styles.js":
-/*!***********************!*\
-  !*** ./src/styles.js ***!
-  \***********************/
+/***/ "./src/controller/styles.ts":
+/*!**********************************!*\
+  !*** ./src/controller/styles.ts ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -404,7 +488,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   styles: () => (/* binding */ styles)
 /* harmony export */ });
-var styles = "\n.mediaPlayer {\n    height: auto;\n    width: 100%;\n    }\n\n.mediaContainer {\n    position: relative;\n    display: flex;\n    margin: 0 auto;\n    width: 100%;\n    align-items: center;\n    justify-content: center;\n    flex-direction: column;\n    gap: 20px;\n    padding: 20px 0;\n}\n\n.mediaTop {\n    flex: 1;\n}\n\n.mediaTop .title {\n    color: white;\n}\n\n.mediaMiddle {\n    flex: 3;\n    display: flex;\n    flex-direction: row;\n    gap: 20px;\n}\n\n.mediaBottom {\n    flex: 1;\n    display: flex;\n    flex-direction: row;\n    align-items: center;\n    justify-content: center;\n    gap: 10px;\n}\n\n.mediaSingle {\n    flex: 1;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    border-radius: 50%;\n}\n\n.playControl {\n    display: flex;\n    align-items: center;\n    gap: 5px;\n}\n\n.playControl button img {\n    width: 20px;\n    height: 20px;\n    cursor: pointer;\n}\n\n.mediaSeek {}\n\n/*both range slider*/\ninput[type=\"range\"] {\n    -webkit-appearance: none;\n    width: 200px;\n    outline: none;\n    height: 2px;\n    margin: 0 15px;\n}\n\ninput[type=\"range\"]::-webkit-slider-thumb {\n    -webkit-appearance: none;\n    height: 15px;\n    width: 3px;\n    background-color: rgb(84, 216, 75);\n    /* border-radius: 50%;*/\n    cursor: pointer;\n}\n\n        \n.play,\n.pause,\n.next,\n.prev,\n.volumeOff,\n.volumeUp,\n.loop {\n    cursor: pointer;\n    display: inline-block;\n    -webkit-mask-repeat: no-repeat;\n    mask-repeat: no-repeat;\n    -webkit-mask-size: 100% 100%;\n    mask-size: 100% 100%;\n}\n.play {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.pause {\n    font-size: 1.5em;\n    width: 1.5em;\n    height: 1.5em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.next {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.prev {\n    width: 1em;\n    height: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.loop {\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n    background-color: blue;\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeUp {\n    margin-left: 10px;\n    width: 1.1em;\n    height: 1.1em;\n    font-size: 1.1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n\n.volumeOff {\n    margin-left: 10px;\n    width: 1em;\n    height: 1em;\n    font-size: 1em;\n    --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n    -webkit-mask-image: var(--svg);\n    mask-image: var(--svg);\n}\n";
+var styles = "\n    .mediaPlayer {\n        height: auto;\n        width: 100%;\n        }\n\n    .mediaContainer {\n        position: relative;\n        display: flex;\n        margin: 0 auto;\n        width: 100%;\n        align-items: center;\n        justify-content: center;\n        flex-direction: column;\n        gap: 20px;\n        padding: 20px 0;\n    }\n\n    .mediaTop {\n        flex: 1;\n    }\n\n    .mediaTop .title {\n        color: white;\n    }\n\n    .mediaMiddle {\n        flex: 3;\n        display: flex;\n        flex-direction: row;\n        gap: 20px;\n    }\n\n    .mediaBottom {\n        flex: 1;\n        display: flex;\n        flex-direction: row;\n        align-items: center;\n        justify-content: center;\n        gap: 10px;\n    }\n\n    .mediaSingle {\n        flex: 1;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        border-radius: 50%;\n    }\n\n    .playControl, .otherControl {\n        display: flex;\n        align-items: center;\n        gap: 5px;\n    }\n\n    .playControl button img {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n    }\n    .mediaSeek {\n        display: flex;\n        gap: 10px;\n        flex-direction: column;\n    }\n    .timer{\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 10px;\n    }\n    .progress, .duration{\n        font-size: 14px\n    }\n\n    /*both range slider*/\n    input[type=\"range\"] {\n        -webkit-appearance: none;\n        width: 200px;\n        outline: none;\n        height: 2px;\n        margin: 0 15px;\n    }\n\n    input[type=\"range\"]::-webkit-slider-thumb {\n        -webkit-appearance: none;\n        height: 15px;\n        width: 3px;\n        background-color: rgb(84, 216, 75);\n        /* border-radius: 50%;*/\n        cursor: pointer;\n    }\n\n            \n    .play,\n    .pause,\n    .next,\n    .prev,\n    .volumeOff,\n    .volumeUp,\n    .loop {\n        cursor: pointer;\n        display: inline-block;\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .play {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .pause {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .next {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .prev {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .loop {\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    \n    .volumeUp {\n        margin-left: 10px;\n        width: 1.1em;\n        height: 1.1em;\n        font-size: 1.1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    \n    .volumeOff {\n        margin-left: 10px;\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .musicImg {\n        display: inline-block;\n        width: 1.2em;\n        height: 1.2em;\n        font-size: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M18 4.309L8 6.5v12.7c0 .937-.627 1.85-1.47 2.243c-.157.073-1.148.295-1.277.32c-1.243.25-2.198-.814-2.25-1.89s.653-1.974 1.472-2.139l1.265-.317c.447-.112.76-.514.76-.975V5.96a1 1 0 0 1 .786-.976l11.607-2.542a.5.5 0 0 1 .607.488v13.61c0 .937-.633 1.85-1.483 2.243c-.158.073-1.158.295-1.288.32c-1.253.25-2.217-.814-2.27-1.89s.66-1.974 1.485-2.139l1.292-.32c.449-.11.764-.513.764-.975z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n";
 
 /***/ }),
 
@@ -3752,22 +3836,19 @@ var __webpack_exports__ = {};
 (() => {
 "use strict";
 /*!**********************!*\
-  !*** ./src/index.js ***!
+  !*** ./src/index.ts ***!
   \**********************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   MediaPlayer: () => (/* reexport safe */ _controller_mediaPlayer__WEBPACK_IMPORTED_MODULE_0__["default"])
 /* harmony export */ });
-/* harmony import */ var _MediaPlayer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./MediaPlayer */ "./src/MediaPlayer.js");
+/* harmony import */ var _controller_mediaPlayer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./controller/mediaPlayer */ "./src/controller/mediaPlayer.ts");
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  MediaPlayer: _MediaPlayer__WEBPACK_IMPORTED_MODULE_0__["default"]
-});
-console.log("Media Player Active!");
+
 })();
 
 /******/ 	return __webpack_exports__;
 /******/ })()
 ;
 });
-//# sourceMappingURL=media-player.js.map
+//# sourceMappingURL=mediaplayer.js.map

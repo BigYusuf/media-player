@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["media-player"] = factory();
+		exports["MediaPlayer"] = factory();
 	else
-		root["media-player"] = factory();
+		root["MediaPlayer"] = factory();
 })(self, () => {
 return /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
@@ -3770,4 +3770,4 @@ console.log("Media Player Active!");
 /******/ })()
 ;
 });
-//# sourceMappingURL=media-player.js.map
+//# sourceMappingURL=MediaPlayer.js.map
