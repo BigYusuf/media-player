@@ -20,12 +20,12 @@ let progress: any = document.getElementById("progress");
 let index = 0;
 
 function MediaPlayer({
-  playControlPosition,
-  playControlValues = ["20px", "20px"],
-  otherControlPosition,
-  otherControlValues = ["20px", "20px"],
-  mediaSeekPosition,
-  mediaSeekValues = ["20px", "20px"],
+  playControlPosition = "",
+  playControlValues,
+  otherControlPosition = "",
+  otherControlValues,
+  mediaSeekPosition="",
+  mediaSeekValues,
   backgroundColor = "black",
   title = "Media Player",
   buttonColor = "white",
@@ -207,9 +207,9 @@ const advanceTheme = (
   mediaMiddle.classList.add("mediaMiddle");
 
   const mediaLibrary = document.createElement("div");
-  if (img == "hide" || img== "hidden") {
+  if (img == "hide" || img == "hidden") {
     mediaLibrary.style.display = "none";
-  }else if (img == "" || !img) {
+  } else if (img == "" || !img) {
     mediaLibrary.style.borderRadius = "50%";
     mediaLibrary.style.padding = "24px";
     mediaLibrary.style.border = `1px solid ${buttonColor}`;
@@ -231,7 +231,7 @@ const advanceTheme = (
   }
   const mediaBottom = document.createElement("div");
   mediaBottom.classList.add("mediaBottom");
-
+  console.log(playControlPosition);
   const playControl = document.createElement("div");
   playControl.classList.add("playControl");
   if (playControlPosition === "hidden" || playControlPosition == "hide") {
@@ -422,6 +422,7 @@ function createStyles() {
   document.head.appendChild(styleTag);
 }
 function getPosition(position: string, positionValues?: string[]) {
+  console.log(position);
   const [vertical, horizontal] = position?.split("-");
   return {
     [vertical]: positionValues ? positionValues[0] : "30px",

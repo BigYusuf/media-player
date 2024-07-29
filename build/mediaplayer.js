@@ -135,15 +135,15 @@ var duration = document.getElementById("duration");
 var progress = document.getElementById("progress");
 var index = 0;
 function MediaPlayer(_ref) {
-  var playControlPosition = _ref.playControlPosition,
-    _ref$playControlValue = _ref.playControlValues,
-    playControlValues = _ref$playControlValue === void 0 ? ["20px", "20px"] : _ref$playControlValue,
-    otherControlPosition = _ref.otherControlPosition,
-    _ref$otherControlValu = _ref.otherControlValues,
-    otherControlValues = _ref$otherControlValu === void 0 ? ["20px", "20px"] : _ref$otherControlValu,
-    mediaSeekPosition = _ref.mediaSeekPosition,
-    _ref$mediaSeekValues = _ref.mediaSeekValues,
-    mediaSeekValues = _ref$mediaSeekValues === void 0 ? ["20px", "20px"] : _ref$mediaSeekValues,
+  var _ref$playControlPosit = _ref.playControlPosition,
+    playControlPosition = _ref$playControlPosit === void 0 ? "" : _ref$playControlPosit,
+    playControlValues = _ref.playControlValues,
+    _ref$otherControlPosi = _ref.otherControlPosition,
+    otherControlPosition = _ref$otherControlPosi === void 0 ? "" : _ref$otherControlPosi,
+    otherControlValues = _ref.otherControlValues,
+    _ref$mediaSeekPositio = _ref.mediaSeekPosition,
+    mediaSeekPosition = _ref$mediaSeekPositio === void 0 ? "" : _ref$mediaSeekPositio,
+    mediaSeekValues = _ref.mediaSeekValues,
     _ref$backgroundColor = _ref.backgroundColor,
     backgroundColor = _ref$backgroundColor === void 0 ? "black" : _ref$backgroundColor,
     _ref$title = _ref.title,
@@ -295,6 +295,7 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   }
   var mediaBottom = document.createElement("div");
   mediaBottom.classList.add("mediaBottom");
+  console.log(playControlPosition);
   var playControl = document.createElement("div");
   playControl.classList.add("playControl");
   if (playControlPosition === "hidden" || playControlPosition == "hide") {
@@ -465,6 +466,7 @@ function createStyles() {
 }
 function getPosition(position, positionValues) {
   var _ref2;
+  console.log(position);
   var _position$split = position == null ? void 0 : position.split("-"),
     vertical = _position$split[0],
     horizontal = _position$split[1];
