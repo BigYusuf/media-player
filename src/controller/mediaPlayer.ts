@@ -24,35 +24,48 @@ function MediaPlayer({
   playControlValues,
   otherControlPosition = "",
   otherControlValues,
-  mediaSeekPosition="",
+  mediaSeekPosition = "",
   mediaSeekValues,
+  playerEdges = "flat",
   backgroundColor = "black",
   title = "Media Player",
+  titleColor = "white",
+  titleSize = 20,
   buttonColor = "white",
-  buttonShape = "rounded",
   mode = "normal",
   img = "", // "./assets/img1.png",
   url = "./audio/1.mp3",
   htmlId = "player1",
   volume = 50,
-  theme,
+  theme, imgWidth = 80,
+  imgHeight = 80,
+  playerWidth,
+  playerHeight,
+
 }: {
   url: string;
   title?: string;
+  playerWidth?: number;
+  playerHeight?: number;
+  titleSize?: number;
   htmlId?: string;
   playControlPosition?: string;
-  playControlValues?: string[];
+  playControlValues?: any;
   otherControlPosition?: string;
-  otherControlValues?: string[];
+  otherControlValues?: any;
   mediaSeekPosition?: string;
-  mediaSeekValues?: string[];
+  mediaSeekValues?: any;
   backgroundColor?: string;
   buttonColor?: string;
-  buttonShape?: string;
+  titleColor?: string;
+  playerEdges?: string;
   mode?: string;
   img?: string;
   volume?: number;
   theme?: string;
+  imgWidth?: number,
+  imgHeight?: number
+
 }) {
   createStyles();
 
@@ -109,8 +122,14 @@ function MediaPlayer({
   const mediaPlayer = document.createElement("div");
 
   mediaPlayer.style.position = "relative";
-  mediaPlayer.style.borderRadius = buttonShape === "rounded" ? "20px" : "0px";
+  mediaPlayer.style.borderRadius = playerEdges === "rounded" ? "20px" : playerEdges === "flat" ? "0px" : `${playerEdges}px`;
   mediaPlayer.style.backgroundColor = backgroundColor;
+  if (playerHeight) {
+    mediaPlayer.style.height = `${playerHeight}px`
+  }
+  if (playerWidth) {
+    mediaPlayer.style.width = `${playerWidth}px`
+  }
   mediaPlayer.classList.add("mediaPlayer");
 
   let myID: HTMLElement | any = document.getElementById(htmlId);
@@ -125,12 +144,16 @@ function MediaPlayer({
       howlPlayer,
       img,
       title,
+      titleColor,
+      titleSize,
       playControlPosition,
       playControlValues,
       otherControlPosition,
       otherControlValues,
       mediaSeekPosition,
-      mediaSeekValues
+      mediaSeekValues, imgWidth,
+      imgHeight,
+
     );
   } else {
     simpleTheme(buttonColor, mediaContainer, howlPlayer);
@@ -184,12 +207,16 @@ const advanceTheme = (
   howlPlayer: any,
   img: any,
   titleValue: string,
+  titleColor: string,
+  titleSize: number,
   playControlPosition: string,
   playControlValues: string[],
   otherControlPosition: string,
   otherControlValues: string[],
   mediaSeekPosition: string,
-  mediaSeekValues: string[]
+  mediaSeekValues: string[],
+  imgWidth: number,
+  imgHeight: number
 ) => {
   console.log("adv");
   mediaContainer.innerHTML = "";
@@ -198,6 +225,8 @@ const advanceTheme = (
   mediaTop.classList.add("mediaTop");
 
   const title = document.createElement("h2");
+  title.style.color = titleColor;
+  title.style.fontSize = `${titleSize}px`;
   title.classList.add("title");
   title.textContent = titleValue;
 
@@ -227,6 +256,8 @@ const advanceTheme = (
   } else {
     playerImg = document.createElement("img");
     playerImg.src = img;
+    playerImg.style.width = imgWidth
+    playerImg.style.height = imgHeight
     mediaLibrary.appendChild(playerImg);
   }
   const mediaBottom = document.createElement("div");

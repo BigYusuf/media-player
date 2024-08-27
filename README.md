@@ -1,6 +1,6 @@
-# Webpack library starter
+# Audio Player library
 
-Webpack based boilerplate for producing libraries (Input: ES6/TypeScript, Output: universal library)
+Audio Player library is a media player library or widget design to work on any website. Just plug and play, although the main focus is for it to work on readymag. But still it will work on any web plateform ot there. It uses howlerjs under the hood to control player functionalities.
 
 ## Features
 
@@ -28,15 +28,50 @@ ES6/TypeScript source files
 
 ## Getting started
 
-1. Setting up the name of your library
+1. Import cdn
   * Open `webpack.config.js` file and change the value of `libraryName` variable.
+    ```html
+      <script src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/build/media-player.js"></script>
+    ```
   * Open `package.json` file and change the value of `main` property so it matches the name of your library.
-2. Build your library
-  * Run `yarn install` (recommended) or `npm install` to get the project's dependencies
-  * Run `yarn build` to produce minified version of your library.
-3. Development mode
-  * Run `yarn dev`. This command will generate a non-minified version of your library and will run a watcher so you get the compilation on file change.
-4. Running the tests
+2. write a basic html and write a div
+  * Make sure to give it a unique id, which isn't shared by any other components as seen in the example below 
+
+  ```html
+    <div id="test"></div>
+  ```
+
+3. Create a script with either simple or advance theme
+  * A simple script, which has just a single button and very few functionalities can be adjusted
+  
+  ```html
+    <script crossorigin="" referrerpolicy="">
+        AudioPlayer.MediaPlayer({
+          url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
+          htmlId: "test3",
+          theme: "simple",
+          playerHeight: 100,//optional
+          playerHeight: 100,//optional
+          playerEdges: "flat",//optional
+        })
+    </script>
+  ```
+  * and advance theme boast a complex array of functionalities where a user can decide to move any object as the please or even remove them
+
+  ```html
+    <script crossorigin="" referrerpolicy="">
+        AudioPlayer.MediaPlayer({
+          url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
+          htmlId: "test3",
+          theme: "simple",
+          playerHeight: 100,//optional
+          playerHeight: 100,//optional
+          playerEdges: "flat",//optional
+        })
+    </script>
+  ```
+
+4. Complete widget integration, here is an example in the example page 
   * Run `yarn test`
 
 ## Scripts

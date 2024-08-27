@@ -99,6 +99,7 @@ export const styles = `
     .prev,
     .volumeOff,
     .volumeUp,
+    .loopOff,
     .loop {
         cursor: pointer;
         display: inline-block;
@@ -144,6 +145,15 @@ export const styles = `
     }
 
     .loop {
+        width: 1em;
+        height: 1em;
+        font-size: 1em;
+        --svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E");
+        background-color: blue;
+        -webkit-mask-image: var(--svg);
+        mask-image: var(--svg);
+    }
+    .loopOff {
         width: 1em;
         height: 1em;
         font-size: 1em;
