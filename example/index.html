@@ -1,47 +1,54 @@
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Webpack & TypeScript</title>
+    <style>
+      .player {
+        height: auto;
+        width: 500px;
+      }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Webpack & TypeScript</title>
-  <style>
-    .player {
-      height: auto;
-      width: 500px;
-    }
+      .player2 {
+        height: 100px;
+        width: 100px;
+      }
+    </style>
+  </head>
 
-    .player2 {
-      height: 100px;
-      width: 100px;
-    }
-  </style>
-</head>
+  <body>
+    <div>
+      <div id="test1" class="player">ba</div>
+    </div>
 
-<body>
-  <div>
+    <div id="test2" class="player">gh</div>
+    <div id="test3" class="player"></div>
+    <div id="test4" class="player2">best player</div>
+    <!-- add scripts here -->
 
-    <div id="test1" class="player">ba </div>
-  </div>
+    <!--<script src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/dist/media-player.js"></script>-->
 
-  <div id="test2" class="player"> gh</div>
-  <div id="test3" class="player"> </div>
-  <div id="test4" class="player2">best player </div>
-  <!-- add scripts here -->
+    <script src="../build/mediaplayer.min.js"></script>
+    <script crossorigin="" referrerpolicy="">
+      //console.log(AudioPlayer)
+      AudioPlayer.MediaPlayer({
+        //url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
+        url: "../dist/audio/3.mp3",
+        htmlId: "test3",
+       theme: "advance",
+        img: "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      });
+    </script>
+    <script crossorigin="" referrerpolicy="">
+      //console.log(AudioPlayer)
 
-  <!--<script src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/dist/media-player.js"></script>-->
-
-  <script src="../build/mediaplayer.min.js"></script>
-  <script crossorigin="" referrerpolicy="">
-    //console.log(AudioPlayer)
-    AudioPlayer.MediaPlayer({
-      url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
-      htmlId: "test3",
-      theme: "advance",
-      img: "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-    })
-
-  </script>
-
-</body>
-
+      AudioPlayer.MediaPlayer({
+        //url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
+        url: "../dist/audio/2.mp3",
+        htmlId: "test4",
+        theme: "simple",
+        img: "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      });
+    </script>
+  </body>
 </html>

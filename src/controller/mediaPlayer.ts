@@ -37,11 +37,11 @@ function MediaPlayer({
   url = "./audio/1.mp3",
   htmlId = "player1",
   volume = 50,
-  theme, imgWidth = 80,
+  theme,
+  imgWidth = 80,
   imgHeight = 80,
   playerWidth,
   playerHeight,
-
 }: {
   url: string;
   title?: string;
@@ -63,11 +63,12 @@ function MediaPlayer({
   img?: string;
   volume?: number;
   theme?: string;
-  imgWidth?: number,
-  imgHeight?: number
-
+  imgWidth?: number;
+  imgHeight?: number;
 }) {
   createStyles();
+
+  var context = new AudioContext();
 
   console.log(`Currently have ${player.length + 1} playing`);
   player.push({
@@ -84,7 +85,9 @@ function MediaPlayer({
     src: isArray(url) ? url : [url],
     volume: volume / 100,
     onplay: function () {
+      context.resume();
       // Display the duration.
+      //  console.log(howlPlayer);
       duration.innerHTML = formatTime(Math.round(howlPlayer.duration()));
       // Start updating the progress of the track.
       function step() {
@@ -122,13 +125,18 @@ function MediaPlayer({
   const mediaPlayer = document.createElement("div");
 
   mediaPlayer.style.position = "relative";
-  mediaPlayer.style.borderRadius = playerEdges === "rounded" ? "20px" : playerEdges === "flat" ? "0px" : `${playerEdges}px`;
+  mediaPlayer.style.borderRadius =
+    playerEdges === "rounded"
+      ? "20px"
+      : playerEdges === "flat"
+      ? "0px"
+      : `${playerEdges}px`;
   mediaPlayer.style.backgroundColor = backgroundColor;
   if (playerHeight) {
-    mediaPlayer.style.height = `${playerHeight}px`
+    mediaPlayer.style.height = `${playerHeight}px`;
   }
   if (playerWidth) {
-    mediaPlayer.style.width = `${playerWidth}px`
+    mediaPlayer.style.width = `${playerWidth}px`;
   }
   mediaPlayer.classList.add("mediaPlayer");
 
@@ -151,12 +159,12 @@ function MediaPlayer({
       otherControlPosition,
       otherControlValues,
       mediaSeekPosition,
-      mediaSeekValues, imgWidth,
-      imgHeight,
-
+      mediaSeekValues,
+      imgWidth,
+      imgHeight
     );
   } else {
-    simpleTheme(buttonColor, mediaContainer, howlPlayer);
+    simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
   }
 
   mediaPlayer.appendChild(mediaContainer);
@@ -164,7 +172,8 @@ function MediaPlayer({
 const simpleTheme = (
   buttonColor: string,
   mediaContainer: HTMLDivElement,
-  howlPlayer: any
+  howlPlayer: any,
+  htmlId?: any
 ) => {
   console.log("simple");
   mediaContainer.innerHTML = "";
@@ -172,7 +181,7 @@ const simpleTheme = (
   const mediaSingle = document.createElement("div");
   mediaSingle.classList.add("mediaSingle");
 
-  console.log(buttonColor);
+//  console.log(buttonColor);
   const btn = document.createElement("div");
   btn.style.backgroundColor = buttonColor;
   btn.classList.add("play");
@@ -181,20 +190,46 @@ const simpleTheme = (
   //  btn.onclick = playBtn(isplayed, howlPlayer, btn, playing);
   btn.addEventListener("click", function () {
     isplayed = !isplayed;
-
     if (isplayed) {
-      console.log("play ");
+      //console.log("play ");
       howlPlayer.play();
       btn.classList.remove("play");
       btn.classList.add("pause");
-      playing = "playing";
+      //  console.log("btn id", htmlId);
+      // playing = "playing";
+
+     // console.log("btn id", howlPlayer);
+    //  console.log("others1", Howler._howls);
+      var sounds = Howler._howls;
+
+      for (var i = 0; i < sounds.length; i++) {
+        if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
+          sounds[i].pause();
+        }
+      }
+      // if (htmlId !== "test4") {
+      //   const el = document.getElementById(htmlId);
+      //   //el.
+      //   console.log("others", el);
+      //   let play1 = el.getElementsByTagName("div")[3];
+      //   console.log("play", play1);
+      //   play1.classList.add("play");
+      //   Howler._howls[0].pause();
+      //   play1.classList.remove("pause");
+      //   //play1?.isplayed === false;
+      //  // play1.howlPlayer.pause();
+      //   play1.addEventListener("click", howlPlayer.pause());
+      //}
     } else {
-      console.log("pause ");
+   //   console.log("pause ");
       howlPlayer.pause();
       btn.classList.add("play");
       btn.classList.remove("pause");
+   //   console.log("btn id, pause", htmlId);
       playing = "paused";
     }
+
+    //play and pause others
   });
 
   mediaSingle.appendChild(btn);
@@ -218,7 +253,7 @@ const advanceTheme = (
   imgWidth: number,
   imgHeight: number
 ) => {
-  console.log("adv");
+//  console.log("adv");
   mediaContainer.innerHTML = "";
 
   const mediaTop = document.createElement("div");
@@ -256,13 +291,13 @@ const advanceTheme = (
   } else {
     playerImg = document.createElement("img");
     playerImg.src = img;
-    playerImg.style.width = imgWidth
-    playerImg.style.height = imgHeight
+    playerImg.style.width = imgWidth;
+    playerImg.style.height = imgHeight;
     mediaLibrary.appendChild(playerImg);
   }
   const mediaBottom = document.createElement("div");
   mediaBottom.classList.add("mediaBottom");
-  console.log(playControlPosition);
+  //console.log(playControlPosition);
   const playControl = document.createElement("div");
   playControl.classList.add("playControl");
   if (playControlPosition === "hidden" || playControlPosition == "hide") {
@@ -282,7 +317,7 @@ const advanceTheme = (
   prev.id = "prev";
   prev.addEventListener("click", function () {
     //prev
-    console.log("prev");
+    //console.log("prev");
     index = index - 1;
     if (index < 0) {
       // index = playlist.length - 1;
@@ -299,13 +334,20 @@ const advanceTheme = (
     isplayed = !isplayed;
 
     if (isplayed) {
-      console.log("play ");
+    //  console.log("play ");
       howlPlayer.play();
       play.classList.remove("play");
       play.classList.add("pause");
       playing = "playing";
+      var sounds = Howler._howls;
+
+      for (var i = 0; i < sounds.length; i++) {
+        if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
+          sounds[i].pause();
+        }
+      }
     } else {
-      console.log("pause ");
+     // console.log("pause ");
       howlPlayer.pause();
       play.classList.add("play");
       play.classList.remove("pause");
@@ -327,7 +369,7 @@ const advanceTheme = (
 
     //self.skipTo(index);
 
-    console.log("next");
+   // console.log("next");
   });
   playControl.appendChild(next);
 
@@ -350,7 +392,7 @@ const advanceTheme = (
   vol.id = "vol";
   vol.addEventListener("click", function () {
     //vol
-    console.log("vol");
+   // console.log("vol");
     mute = !mute;
     if (mute) {
       howlPlayer.mute(true);

@@ -174,6 +174,7 @@ function MediaPlayer(_ref) {
     playerWidth = _ref.playerWidth,
     playerHeight = _ref.playerHeight;
   createStyles();
+  var context = new AudioContext();
   console.log("Currently have " + (player.length + 1) + " playing");
   player.push({
     volume: volume / 100,
@@ -189,7 +190,9 @@ function MediaPlayer(_ref) {
     src: (0,_mediaController__WEBPACK_IMPORTED_MODULE_2__.isArray)(url) ? url : [url],
     volume: volume / 100,
     onplay: function onplay() {
+      context.resume();
       // Display the duration.
+      //  console.log(howlPlayer);
       duration.innerHTML = formatTime(Math.round(howlPlayer.duration()));
       // Start updating the progress of the track.
       function step() {
@@ -242,16 +245,17 @@ function MediaPlayer(_ref) {
   if (theme === "advance") {
     advanceTheme(buttonColor, mediaContainer, howlPlayer, img, title, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight);
   } else {
-    simpleTheme(buttonColor, mediaContainer, howlPlayer);
+    simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
   }
   mediaPlayer.appendChild(mediaContainer);
 }
-var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer) {
+var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId) {
   console.log("simple");
   mediaContainer.innerHTML = "";
   var mediaSingle = document.createElement("div");
   mediaSingle.classList.add("mediaSingle");
-  console.log(buttonColor);
+
+  //  console.log(buttonColor);
   var btn = document.createElement("div");
   btn.style.backgroundColor = buttonColor;
   btn.classList.add("play");
@@ -261,24 +265,50 @@ var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer) 
   btn.addEventListener("click", function () {
     isplayed = !isplayed;
     if (isplayed) {
-      console.log("play ");
+      //console.log("play ");
       howlPlayer.play();
       btn.classList.remove("play");
       btn.classList.add("pause");
-      playing = "playing";
+      //  console.log("btn id", htmlId);
+      // playing = "playing";
+
+      // console.log("btn id", howlPlayer);
+      //  console.log("others1", Howler._howls);
+      var sounds = howler__WEBPACK_IMPORTED_MODULE_0__.Howler._howls;
+      for (var i = 0; i < sounds.length; i++) {
+        if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
+          sounds[i].pause();
+        }
+      }
+      // if (htmlId !== "test4") {
+      //   const el = document.getElementById(htmlId);
+      //   //el.
+      //   console.log("others", el);
+      //   let play1 = el.getElementsByTagName("div")[3];
+      //   console.log("play", play1);
+      //   play1.classList.add("play");
+      //   Howler._howls[0].pause();
+      //   play1.classList.remove("pause");
+      //   //play1?.isplayed === false;
+      //  // play1.howlPlayer.pause();
+      //   play1.addEventListener("click", howlPlayer.pause());
+      //}
     } else {
-      console.log("pause ");
+      //   console.log("pause ");
       howlPlayer.pause();
       btn.classList.add("play");
       btn.classList.remove("pause");
+      //   console.log("btn id, pause", htmlId);
       playing = "paused";
     }
+
+    //play and pause others
   });
   mediaSingle.appendChild(btn);
   mediaContainer.appendChild(mediaSingle);
 };
 var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer, img, titleValue, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight) {
-  console.log("adv");
+  //  console.log("adv");
   mediaContainer.innerHTML = "";
   var mediaTop = document.createElement("div");
   mediaTop.classList.add("mediaTop");
@@ -315,7 +345,7 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   }
   var mediaBottom = document.createElement("div");
   mediaBottom.classList.add("mediaBottom");
-  console.log(playControlPosition);
+  //console.log(playControlPosition);
   var playControl = document.createElement("div");
   playControl.classList.add("playControl");
   if (playControlPosition === "hidden" || playControlPosition == "hide") {
@@ -333,7 +363,7 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   prev.id = "prev";
   prev.addEventListener("click", function () {
     //prev
-    console.log("prev");
+    //console.log("prev");
     index = index - 1;
     if (index < 0) {
       // index = playlist.length - 1;
@@ -348,13 +378,19 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   play.addEventListener("click", function () {
     isplayed = !isplayed;
     if (isplayed) {
-      console.log("play ");
+      //  console.log("play ");
       howlPlayer.play();
       play.classList.remove("play");
       play.classList.add("pause");
       playing = "playing";
+      var sounds = howler__WEBPACK_IMPORTED_MODULE_0__.Howler._howls;
+      for (var i = 0; i < sounds.length; i++) {
+        if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
+          sounds[i].pause();
+        }
+      }
     } else {
-      console.log("pause ");
+      // console.log("pause ");
       howlPlayer.pause();
       play.classList.add("play");
       play.classList.remove("pause");
@@ -375,7 +411,7 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
 
     //self.skipTo(index);
 
-    console.log("next");
+    // console.log("next");
   });
   playControl.appendChild(next);
   var otherControl = document.createElement("div");
@@ -395,7 +431,7 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   vol.id = "vol";
   vol.addEventListener("click", function () {
     //vol
-    console.log("vol");
+    // console.log("vol");
     mute = !mute;
     if (mute) {
       howlPlayer.mute(true);
