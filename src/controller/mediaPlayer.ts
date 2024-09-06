@@ -1,12 +1,6 @@
 import { Howl, Howler } from "howler";
 import { styles } from "./styles";
-import {
-  getId,
-  isArray,
-  saveToLocalStorage,
-  setVolume,
-  updatePlay,
-} from "./mediaController";
+import { isArray, saveToLocalStorage } from "./mediaController";
 
 let player: any = [];
 let mute: boolean = false;
@@ -33,7 +27,7 @@ function MediaPlayer({
   titleSize = 20,
   buttonColor = "white",
   mode = "normal",
-  img = "", // "./assets/img1.png",
+  img = "",
   url = "./audio/1.mp3",
   htmlId = "player1",
   volume = 50,
@@ -107,6 +101,10 @@ function MediaPlayer({
       play_btn.classList.add("play");
       play_btn.classList.remove("pause");
     },
+    // onpause: function () {
+    //   play_btn.classList.add("play");
+    //   play_btn.classList.remove("pause");
+   // },
     onseek: function () {
       // Start updating the progress of the track. function step() {
       function step() {
@@ -181,7 +179,7 @@ const simpleTheme = (
   const mediaSingle = document.createElement("div");
   mediaSingle.classList.add("mediaSingle");
 
-//  console.log(buttonColor);
+  //  console.log(buttonColor);
   const btn = document.createElement("div");
   btn.style.backgroundColor = buttonColor;
   btn.classList.add("play");
@@ -198,8 +196,8 @@ const simpleTheme = (
       //  console.log("btn id", htmlId);
       // playing = "playing";
 
-     // console.log("btn id", howlPlayer);
-    //  console.log("others1", Howler._howls);
+      // console.log("btn id", howlPlayer);
+      //  console.log("others1", Howler._howls);
       var sounds = Howler._howls;
 
       for (var i = 0; i < sounds.length; i++) {
@@ -221,11 +219,11 @@ const simpleTheme = (
       //   play1.addEventListener("click", howlPlayer.pause());
       //}
     } else {
-   //   console.log("pause ");
+      //   console.log("pause ");
       howlPlayer.pause();
       btn.classList.add("play");
       btn.classList.remove("pause");
-   //   console.log("btn id, pause", htmlId);
+      //   console.log("btn id, pause", htmlId);
       playing = "paused";
     }
 
@@ -253,7 +251,7 @@ const advanceTheme = (
   imgWidth: number,
   imgHeight: number
 ) => {
-//  console.log("adv");
+  //  console.log("adv");
   mediaContainer.innerHTML = "";
 
   const mediaTop = document.createElement("div");
@@ -334,7 +332,7 @@ const advanceTheme = (
     isplayed = !isplayed;
 
     if (isplayed) {
-    //  console.log("play ");
+      //  console.log("play ");
       howlPlayer.play();
       play.classList.remove("play");
       play.classList.add("pause");
@@ -347,7 +345,7 @@ const advanceTheme = (
         }
       }
     } else {
-     // console.log("pause ");
+      // console.log("pause ");
       howlPlayer.pause();
       play.classList.add("play");
       play.classList.remove("pause");
@@ -369,7 +367,7 @@ const advanceTheme = (
 
     //self.skipTo(index);
 
-   // console.log("next");
+    // console.log("next");
   });
   playControl.appendChild(next);
 
@@ -392,7 +390,7 @@ const advanceTheme = (
   vol.id = "vol";
   vol.addEventListener("click", function () {
     //vol
-   // console.log("vol");
+    // console.log("vol");
     mute = !mute;
     if (mute) {
       howlPlayer.mute(true);

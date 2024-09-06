@@ -212,6 +212,10 @@ function MediaPlayer(_ref) {
       play_btn.classList.add("play");
       play_btn.classList.remove("pause");
     },
+    // onpause: function () {
+    //   play_btn.classList.add("play");
+    //   play_btn.classList.remove("pause");
+    // },
     onseek: function onseek() {
       // Start updating the progress of the track. function step() {
       function step() {
