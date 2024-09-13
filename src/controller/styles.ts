@@ -96,7 +96,14 @@ export const styles = `
     .progress, .duration{
         font-size: 14px
     }
-
+    .bgImage{
+        position: absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        object-fit: cover;
+    }
     /*both range slider*/
     input[type="range"] {
         -webkit-appearance: none;

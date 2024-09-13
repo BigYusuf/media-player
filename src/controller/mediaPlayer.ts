@@ -25,6 +25,7 @@ function MediaPlayer({
   mediaSeekValues,
   playerEdges = "flat",
   backgroundColor = "black",
+  backgroundImage,
   title = "",
   titleColor = "white",
   titleSize = 20,
@@ -56,6 +57,7 @@ function MediaPlayer({
   mediaSeekPosition?: string;
   mediaSeekValues?: any;
   backgroundColor?: string;
+  backgroundImage?: string;
   buttonColor?: string;
   titleColor?: string;
   playerEdges?: string;
@@ -136,7 +138,20 @@ function MediaPlayer({
       : playerEdges === "flat"
       ? "0px"
       : `${playerEdges}px`;
-  mediaPlayer.style.backgroundColor = backgroundColor;
+
+  if (backgroundImage) {
+    const bgImage = document.createElement("img");
+    bgImage.classList.add("bgImage");
+    bgImage.src = backgroundImage;
+    //mediaPlayer.style.backgroundImage = backgroundImage;
+    //mediaPlayer.style.backgroundRepeat = "no-repeat";
+    // mediaPlayer.style.backgroundSize = "cover";
+
+    mediaPlayer.appendChild(bgImage);
+  } else {
+    mediaPlayer.style.backgroundColor = backgroundColor;
+  }
+
   if (playerHeight) {
     mediaPlayer.style.height = `${playerHeight}px`;
   }
@@ -200,15 +215,14 @@ function MediaPlayer({
     const mediaSideBarContent = document.createElement("div");
     mediaSideBarContent.classList.add("sidebarContent");
     mediaSideBarContent.id = "sidebarContent";
-    
+
     const closeSidebarBtn = document.createElement("div");
     closeSidebarBtn.classList.add("closeBtn");
     closeSidebarBtn.style.color = buttonColor;
     closeSidebarBtn.id = "closeBtn";
     closeSidebarBtn.addEventListener("click", function () {
-      
-    mediaSideBar.style.display = "none";
-    })
+      mediaSideBar.style.display = "none";
+    });
 
     mediaSideBarContent.appendChild(closeSidebarBtn);
     mediaSideBar.appendChild(mediaSideBarContent);
