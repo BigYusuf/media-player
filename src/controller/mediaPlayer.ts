@@ -11,9 +11,12 @@ let playing: string = "not playing";
 let play_btn: any = document.getElementById("play");
 let duration: any = document.getElementById("duration");
 let progress: any = document.getElementById("progress");
+let settingSideBar: any = document.getElementById("mediaSettingSidebar");
 let index = 0;
 
 function MediaPlayer({
+  settingsPosition = "top-right",
+  settingsValues,
   playControlPosition = "",
   playControlValues,
   otherControlPosition = "",
@@ -22,7 +25,7 @@ function MediaPlayer({
   mediaSeekValues,
   playerEdges = "flat",
   backgroundColor = "black",
-  title = "Media Player",
+  title = "",
   titleColor = "white",
   titleSize = 20,
   buttonColor = "white",
@@ -36,6 +39,7 @@ function MediaPlayer({
   imgHeight = 80,
   playerWidth,
   playerHeight,
+  editable,
 }: {
   url: string;
   title?: string;
@@ -43,6 +47,8 @@ function MediaPlayer({
   playerHeight?: number;
   titleSize?: number;
   htmlId?: string;
+  settingsPosition?: string;
+  settingsValues?: any;
   playControlPosition?: string;
   playControlValues?: any;
   otherControlPosition?: string;
@@ -59,6 +65,7 @@ function MediaPlayer({
   theme?: string;
   imgWidth?: number;
   imgHeight?: number;
+  editable?: boolean;
 }) {
   createStyles();
 
@@ -104,7 +111,7 @@ function MediaPlayer({
     // onpause: function () {
     //   play_btn.classList.add("play");
     //   play_btn.classList.remove("pause");
-   // },
+    // },
     onseek: function () {
       // Start updating the progress of the track. function step() {
       function step() {
@@ -141,7 +148,8 @@ function MediaPlayer({
   let myID: HTMLElement | any = document.getElementById(htmlId);
   myID.appendChild(mediaPlayer);
 
-  let mediaContainer = document.createElement("div");
+  const mediaContainer = document.createElement("div");
+
   mediaContainer.classList.add("mediaContainer");
   if (theme === "advance") {
     advanceTheme(
@@ -159,10 +167,53 @@ function MediaPlayer({
       mediaSeekPosition,
       mediaSeekValues,
       imgWidth,
-      imgHeight
+      imgHeight,
+      editable
     );
   } else {
     simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
+  }
+
+  const mediaSetting = document.createElement("div");
+
+  mediaSetting.style.backgroundColor = buttonColor;
+  mediaSetting.classList.add("settings");
+  mediaSetting.id = "settings";
+
+  let setttingPosition = getPosition(settingsPosition, settingsValues);
+
+  mediaSetting.style.position = "absolute";
+  Object.keys(setttingPosition).forEach(
+    (key) => (mediaSetting.style[key] = setttingPosition[key])
+  );
+  const mediaSideBar = document.createElement("div");
+
+  mediaSetting.addEventListener("click", function () {
+    console.log("settings");
+    mediaSideBar.style.display = "block";
+  });
+  if (editable && theme === "advance") {
+    mediaSideBar.classList.add("mediaSettingSidebar");
+    mediaSideBar.id = "mediaSettingSidebar";
+    mediaSideBar.style.display = "none";
+
+    const mediaSideBarContent = document.createElement("div");
+    mediaSideBarContent.classList.add("sidebarContent");
+    mediaSideBarContent.id = "sidebarContent";
+    
+    const closeSidebarBtn = document.createElement("div");
+    closeSidebarBtn.classList.add("closeBtn");
+    closeSidebarBtn.style.color = buttonColor;
+    closeSidebarBtn.id = "closeBtn";
+    closeSidebarBtn.addEventListener("click", function () {
+      
+    mediaSideBar.style.display = "none";
+    })
+
+    mediaSideBarContent.appendChild(closeSidebarBtn);
+    mediaSideBar.appendChild(mediaSideBarContent);
+    mediaContainer.appendChild(mediaSideBar);
+    mediaContainer.appendChild(mediaSetting);
   }
 
   mediaPlayer.appendChild(mediaContainer);
@@ -198,7 +249,7 @@ const simpleTheme = (
 
       // console.log("btn id", howlPlayer);
       //  console.log("others1", Howler._howls);
-      var sounds = Howler._howls;
+      var sounds = Howler?._howls;
 
       for (var i = 0; i < sounds.length; i++) {
         if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
@@ -249,7 +300,8 @@ const advanceTheme = (
   mediaSeekPosition: string,
   mediaSeekValues: string[],
   imgWidth: number,
-  imgHeight: number
+  imgHeight: number,
+  editable: boolean
 ) => {
   //  console.log("adv");
   mediaContainer.innerHTML = "";
@@ -493,7 +545,6 @@ function createStyles() {
   document.head.appendChild(styleTag);
 }
 function getPosition(position: string, positionValues?: string[]) {
-  console.log(position);
   const [vertical, horizontal] = position?.split("-");
   return {
     [vertical]: positionValues ? positionValues[0] : "30px",
