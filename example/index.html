@@ -26,35 +26,50 @@
     <div id="test4" class="player2">best player</div>
     <!-- add scripts here -->
 
-    <!-- <script
+    <script
       crossorigin="anonymous"
       referrerpolicy=""
       src="https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/build/mediaplayer.min.js"
-    ></script> -->
+    ></script>
 
     <script src="../build/mediaplayer.min.js"></script>
     <script crossorigin="" referrerpolicy="">
-      //console.log(AudioPlayer)
       AudioPlayer.MediaPlayer({
-        //url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
         url: "../audio/3.mp3",
         htmlId: "test3",
         theme: "advance",
-        backgroundImage: "../assets/img1.png",
-       // editable: true,
-        title:"simple"
-        // img: "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+        img: "https://images.pexels.com/photos/1020478/pexels-photo-1020478.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", //optional
+        buttonColor: "blue", //optional
+        title: "Title", //optional
+        titleColor: "#f5f5f5", //optional
+        titleSize: 30, //optional
+        fontFamily: "Gentona", //optional
+        imgWidth: 380, //optional
+        imgHeight: 380, //optional
+        playerEdges: 20, //optional
+        backGrounColor: "black", //optional-- won't show if backgroundImage is present
+        backgroundImage:
+          "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2", //optional
+        playerWidth: 500, //optional
+        playerHeight: 600, //optional
+        editable: false, //optional-- still under development
+        //below is used to move control arround and can go below zero
+        settingsPosition: "top-right", //optional
+        settingsValues: ["0px", "23px"], //optional  --default is ["30px", "30px"]
+        playControlPosition: "bottom-left", //optional
+        playControlValues: ["20px", "20px"], //optional  --default is ["30px", "30px"]
+        otherControlPosition: "top-left", //optional
+        otherControlValues: ["0px", "40px"], //optional --default is ["30px", "30px"]
+        mediaSeekPosition: "bottom-right", //optional
+        mediaSeekValues: ["0px", "10px"], //optional  --default is ["30px", "30px"]
       });
     </script>
     <script crossorigin="" referrerpolicy="">
       //console.log(AudioPlayer)
 
       AudioPlayer.MediaPlayer({
-        url: "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3",
         url: "../audio/2.mp3",
         htmlId: "test4",
-        theme: "simple",
-        //        img: "https://images.pexels.com/photos/27439406/pexels-photo-27439406/free-photo-of-a-cup-of-coffee-sits-on-a-bed-with-pillows.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
       });
     </script>
   </body>

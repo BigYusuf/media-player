@@ -1,4 +1,48 @@
 export const styles = `
+    @font-face {
+        font-family: "Gentona";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBook.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaBold";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookBold.otf") format("opentype");
+   }
+    @font-face {
+        font-family: "GentonaItalic";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookItalic.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaExtraBold";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBold.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaSemiBold";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaSemiBold.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaExtraBoldItalic";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBoldItalic.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaExtraLight";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLight.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaHeavy";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaHeavy.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaThin";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaThin.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaMedium";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaMedium.otf") format("opentype");
+    }
+    @font-face {
+        font-family: "GentonaExtraLightItalic";
+        src: url("https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLightItalic.otf") format("opentype");
+    }
     .mediaPlayer {
         height: auto;
         width: 100%;

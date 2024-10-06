@@ -1,0 +1,11 @@
+1. change font
+2. add a settings icon ----done
+- sidebar containing all settings
+- background
+- control colors
+- title
+- thumbnail
+- 
+- musicurl/ file
+
+

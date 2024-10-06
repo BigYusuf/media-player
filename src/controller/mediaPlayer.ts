@@ -41,6 +41,7 @@ function MediaPlayer({
   playerWidth,
   playerHeight,
   editable,
+  fontFamily,
 }: {
   url: string;
   title?: string;
@@ -60,7 +61,7 @@ function MediaPlayer({
   backgroundImage?: string;
   buttonColor?: string;
   titleColor?: string;
-  playerEdges?: string;
+  playerEdges?: any;
   mode?: string;
   img?: string;
   volume?: number;
@@ -68,6 +69,7 @@ function MediaPlayer({
   imgWidth?: number;
   imgHeight?: number;
   editable?: boolean;
+  fontFamily?: string;
 }) {
   createStyles();
 
@@ -143,6 +145,13 @@ function MediaPlayer({
     const bgImage = document.createElement("img");
     bgImage.classList.add("bgImage");
     bgImage.src = backgroundImage;
+    bgImage.style.borderRadius =
+    playerEdges === "rounded"
+      ? "20px"
+      : playerEdges === "flat"
+      ? "0px"
+      : `${playerEdges}px`;
+
     //mediaPlayer.style.backgroundImage = backgroundImage;
     //mediaPlayer.style.backgroundRepeat = "no-repeat";
     // mediaPlayer.style.backgroundSize = "cover";
@@ -183,7 +192,8 @@ function MediaPlayer({
       mediaSeekValues,
       imgWidth,
       imgHeight,
-      editable
+      editable,
+      fontFamily
     );
   } else {
     simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
@@ -315,7 +325,8 @@ const advanceTheme = (
   mediaSeekValues: string[],
   imgWidth: number,
   imgHeight: number,
-  editable: boolean
+  editable: boolean,
+  fontFamily: string
 ) => {
   //  console.log("adv");
   mediaContainer.innerHTML = "";
@@ -326,6 +337,7 @@ const advanceTheme = (
   const title = document.createElement("h2");
   title.style.color = titleColor;
   title.style.fontSize = `${titleSize}px`;
+  title.style.fontFamily = fontFamily;
   title.classList.add("title");
   title.textContent = titleValue;
 
