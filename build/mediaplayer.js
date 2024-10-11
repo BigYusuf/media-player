@@ -179,7 +179,9 @@ function MediaPlayer(_ref) {
     playerWidth = _ref.playerWidth,
     playerHeight = _ref.playerHeight,
     editable = _ref.editable,
-    fontFamily = _ref.fontFamily;
+    fontFamily = _ref.fontFamily,
+    playIcon = _ref.playIcon,
+    pauseIcon = _ref.pauseIcon;
   createStyles();
   var context = new AudioContext();
   console.log("Currently have " + (player.length + 1) + " playing");
@@ -269,7 +271,7 @@ function MediaPlayer(_ref) {
   if (theme === "advance") {
     advanceTheme(buttonColor, mediaContainer, howlPlayer, img, title, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight, editable, fontFamily);
   } else {
-    simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
+    simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId, playIcon, pauseIcon);
   }
   var mediaSetting = document.createElement("div");
   mediaSetting.style.backgroundColor = buttonColor;
@@ -306,7 +308,7 @@ function MediaPlayer(_ref) {
   }
   mediaPlayer.appendChild(mediaContainer);
 }
-var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId) {
+var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId, playIcon, pauseIcon) {
   console.log("simple");
   mediaContainer.innerHTML = "";
   var mediaSingle = document.createElement("div");
@@ -315,51 +317,54 @@ var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, 
   //  console.log(buttonColor);
   var btn = document.createElement("div");
   btn.style.backgroundColor = buttonColor;
-  btn.classList.add("play");
+  var playImg = document.createElement("img");
+  var pauseImg = document.createElement("img");
+  playImg.src = playIcon;
+  playImg.style.width = "40px";
+  playImg.style.height = "40px";
+  pauseImg.style.width = "40px";
+  pauseImg.style.height = "40px";
+  if (playIcon) {
+    btn.appendChild(playImg);
+  } else {
+    btn.classList.add("play");
+  }
   btn.id = "play";
   play_btn = btn;
-  //  btn.onclick = playBtn(isplayed, howlPlayer, btn, playing);
   btn.addEventListener("click", function () {
     isplayed = !isplayed;
     if (isplayed) {
-      //console.log("play ");
       howlPlayer.play();
-      btn.classList.remove("play");
-      btn.classList.add("pause");
-      //  console.log("btn id", htmlId);
-      // playing = "playing";
-
-      // console.log("btn id", howlPlayer);
-      //  console.log("others1", Howler._howls);
+      if (playIcon) {
+        btn.removeChild(playImg);
+      } else {
+        btn.classList.remove("play");
+      }
+      if (pauseIcon) {
+        btn.appendChild(pauseImg);
+      } else {
+        btn.classList.add("pause");
+      }
       var sounds = howler__WEBPACK_IMPORTED_MODULE_0__.Howler == null ? void 0 : howler__WEBPACK_IMPORTED_MODULE_0__.Howler._howls;
       for (var i = 0; i < sounds.length; i++) {
         if (sounds[i].playing() && sounds[i]._src !== howlPlayer._src) {
           sounds[i].pause();
         }
       }
-      // if (htmlId !== "test4") {
-      //   const el = document.getElementById(htmlId);
-      //   //el.
-      //   console.log("others", el);
-      //   let play1 = el.getElementsByTagName("div")[3];
-      //   console.log("play", play1);
-      //   play1.classList.add("play");
-      //   Howler._howls[0].pause();
-      //   play1.classList.remove("pause");
-      //   //play1?.isplayed === false;
-      //  // play1.howlPlayer.pause();
-      //   play1.addEventListener("click", howlPlayer.pause());
-      //}
     } else {
-      //   console.log("pause ");
       howlPlayer.pause();
-      btn.classList.add("play");
-      btn.classList.remove("pause");
-      //   console.log("btn id, pause", htmlId);
+      if (playIcon) {
+        btn.appendChild(playImg);
+      } else {
+        btn.classList.add("play");
+      }
+      if (pauseIcon) {
+        btn.removeChild(pauseImg);
+      } else {
+        btn.classList.remove("pause");
+      }
       playing = "paused";
     }
-
-    //play and pause others
   });
   mediaSingle.appendChild(btn);
   mediaContainer.appendChild(mediaSingle);

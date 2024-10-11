@@ -42,6 +42,8 @@ function MediaPlayer({
   playerHeight,
   editable,
   fontFamily,
+  playIcon,
+  pauseIcon,
 }: {
   url: string;
   title?: string;
@@ -70,6 +72,8 @@ function MediaPlayer({
   imgHeight?: number;
   editable?: boolean;
   fontFamily?: string;
+  playIcon?: any;
+  pauseIcon?: any;
 }) {
   createStyles();
 
@@ -146,11 +150,11 @@ function MediaPlayer({
     bgImage.classList.add("bgImage");
     bgImage.src = backgroundImage;
     bgImage.style.borderRadius =
-    playerEdges === "rounded"
-      ? "20px"
-      : playerEdges === "flat"
-      ? "0px"
-      : `${playerEdges}px`;
+      playerEdges === "rounded"
+        ? "20px"
+        : playerEdges === "flat"
+        ? "0px"
+        : `${playerEdges}px`;
 
     //mediaPlayer.style.backgroundImage = backgroundImage;
     //mediaPlayer.style.backgroundRepeat = "no-repeat";
@@ -196,7 +200,14 @@ function MediaPlayer({
       fontFamily
     );
   } else {
-    simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId);
+    simpleTheme(
+      buttonColor,
+      mediaContainer,
+      howlPlayer,
+      htmlId,
+      playIcon,
+      pauseIcon
+    );
   }
 
   const mediaSetting = document.createElement("div");
@@ -246,7 +257,9 @@ const simpleTheme = (
   buttonColor: string,
   mediaContainer: HTMLDivElement,
   howlPlayer: any,
-  htmlId?: any
+  htmlId?: any,
+  playIcon?: any,
+  pauseIcon?: any
 ) => {
   console.log("simple");
   mediaContainer.innerHTML = "";
@@ -257,22 +270,37 @@ const simpleTheme = (
   //  console.log(buttonColor);
   const btn = document.createElement("div");
   btn.style.backgroundColor = buttonColor;
-  btn.classList.add("play");
+  const playImg = document.createElement("img");
+  const pauseImg = document.createElement("img");
+
+  playImg.src = playIcon;
+  playImg.style.width = "40px";
+  playImg.style.height = "40px";
+  pauseImg.style.width = "40px";
+  pauseImg.style.height = "40px";
+  if (playIcon) {
+    btn.appendChild(playImg);
+  } else {
+    btn.classList.add("play");
+  }
   btn.id = "play";
   play_btn = btn;
-  //  btn.onclick = playBtn(isplayed, howlPlayer, btn, playing);
   btn.addEventListener("click", function () {
     isplayed = !isplayed;
     if (isplayed) {
-      //console.log("play ");
       howlPlayer.play();
-      btn.classList.remove("play");
-      btn.classList.add("pause");
-      //  console.log("btn id", htmlId);
-      // playing = "playing";
 
-      // console.log("btn id", howlPlayer);
-      //  console.log("others1", Howler._howls);
+      if (playIcon) {
+        btn.removeChild(playImg);
+      } else {
+        btn.classList.remove("play");
+      }
+      if (pauseIcon) {
+        btn.appendChild(pauseImg);
+      } else {
+        btn.classList.add("pause");
+      }
+
       var sounds = Howler?._howls;
 
       for (var i = 0; i < sounds.length; i++) {
@@ -280,29 +308,21 @@ const simpleTheme = (
           sounds[i].pause();
         }
       }
-      // if (htmlId !== "test4") {
-      //   const el = document.getElementById(htmlId);
-      //   //el.
-      //   console.log("others", el);
-      //   let play1 = el.getElementsByTagName("div")[3];
-      //   console.log("play", play1);
-      //   play1.classList.add("play");
-      //   Howler._howls[0].pause();
-      //   play1.classList.remove("pause");
-      //   //play1?.isplayed === false;
-      //  // play1.howlPlayer.pause();
-      //   play1.addEventListener("click", howlPlayer.pause());
-      //}
     } else {
-      //   console.log("pause ");
       howlPlayer.pause();
-      btn.classList.add("play");
-      btn.classList.remove("pause");
-      //   console.log("btn id, pause", htmlId);
+      if (playIcon) {
+        btn.appendChild(playImg);
+      } else {
+        btn.classList.add("play");
+      }
+      if (pauseIcon) {
+        btn.removeChild(pauseImg);
+      } else {
+        btn.classList.remove("pause");
+      }
+
       playing = "paused";
     }
-
-    //play and pause others
   });
 
   mediaSingle.appendChild(btn);
