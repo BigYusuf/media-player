@@ -44,6 +44,12 @@ function MediaPlayer({
   fontFamily,
   playIcon,
   pauseIcon,
+  volIcon,
+  muteIcon,
+  loopIcon,
+  loopOffIcon,
+  nextIcon,
+  prevIcon,
 }: {
   url: string;
   title?: string;
@@ -70,10 +76,16 @@ function MediaPlayer({
   theme?: string;
   imgWidth?: number;
   imgHeight?: number;
-  editable?: boolean;
-  fontFamily?: string;
+  editable: boolean;
+  fontFamily: string;
   playIcon?: any;
   pauseIcon?: any;
+  volIcon?: any;
+  muteIcon?: any;
+  loopIcon?: any;
+  loopOffIcon?: any;
+  nextIcon?: any;
+  prevIcon?: any;
 }) {
   createStyles();
 
@@ -197,7 +209,15 @@ function MediaPlayer({
       imgWidth,
       imgHeight,
       editable,
-      fontFamily
+      fontFamily,
+      playIcon,
+      pauseIcon,
+      volIcon,
+      muteIcon,
+      loopIcon,
+      loopOffIcon,
+      nextIcon,
+      prevIcon
     );
   } else {
     simpleTheme(
@@ -274,6 +294,7 @@ const simpleTheme = (
   const pauseImg = document.createElement("img");
 
   playImg.src = playIcon;
+  pauseImg.src = pauseIcon;
   playImg.style.width = "40px";
   playImg.style.height = "40px";
   pauseImg.style.width = "40px";
@@ -346,9 +367,16 @@ const advanceTheme = (
   imgWidth: number,
   imgHeight: number,
   editable: boolean,
-  fontFamily: string
+  fontFamily: string,
+  playIcon?: any,
+  pauseIcon?: any,
+  volIcon?: any,
+  muteIcon?: any,
+  loopIcon?: any,
+  loopOffIcon?: any,
+  nextIcon?: any,
+  prevIcon?: any
 ) => {
-  //  console.log("adv");
   mediaContainer.innerHTML = "";
 
   const mediaTop = document.createElement("div");
@@ -409,11 +437,20 @@ const advanceTheme = (
 
   const prev = document.createElement("div");
   prev.style.backgroundColor = buttonColor;
-  prev.classList.add("prev");
+
+  const prevImg = document.createElement("img");
+
+  prevImg.src = prevIcon;
+  prevImg.style.width = "30px";
+  prevImg.style.height = "30px";
+  if (prevIcon) {
+    prev.appendChild(prevImg);
+  } else {
+    prev.classList.add("prev");
+  }
   prev.id = "prev";
   prev.addEventListener("click", function () {
-    //prev
-    //console.log("prev");
+
     index = index - 1;
     if (index < 0) {
       // index = playlist.length - 1;
@@ -423,17 +460,38 @@ const advanceTheme = (
 
   const play = document.createElement("div");
   play.style.backgroundColor = buttonColor;
-  play.classList.add("play");
   play.id = "play";
   play_btn = play;
+
+  const playImg = document.createElement("img");
+  const pauseImg = document.createElement("img");
+
+  playImg.src = playIcon;
+  pauseImg.src = pauseIcon;
+  playImg.style.width = "40px";
+  playImg.style.height = "40px";
+  pauseImg.style.width = "40px";
+  pauseImg.style.height = "40px";
+  if (playIcon) {
+    play.appendChild(playImg);
+  } else {
+    play.classList.add("play");
+  }
   play.addEventListener("click", function () {
     isplayed = !isplayed;
 
     if (isplayed) {
-      //  console.log("play ");
       howlPlayer.play();
-      play.classList.remove("play");
-      play.classList.add("pause");
+      if (playIcon) {
+        play.removeChild(playImg);
+      } else {
+        play.classList.remove("play");
+      }
+      if (pauseIcon) {
+        play.appendChild(pauseImg);
+      } else {
+        play.classList.add("pause");
+      }
       playing = "playing";
       var sounds = Howler._howls;
 
@@ -443,10 +501,17 @@ const advanceTheme = (
         }
       }
     } else {
-      // console.log("pause ");
       howlPlayer.pause();
-      play.classList.add("play");
-      play.classList.remove("pause");
+      if (playIcon) {
+        play.appendChild(playImg);
+      } else {
+        play.classList.add("play");
+      }
+      if (pauseIcon) {
+        play.removeChild(pauseImg);
+      } else {
+        play.classList.remove("pause");
+      }
       playing = "paused";
     }
   });
@@ -454,7 +519,17 @@ const advanceTheme = (
 
   const next = document.createElement("div");
   next.style.backgroundColor = buttonColor;
-  next.classList.add("next");
+
+  const nextImg = document.createElement("img");
+
+  nextImg.src = nextIcon;
+  nextImg.style.width = "30px";
+  nextImg.style.height = "30px";
+  if (nextIcon) {
+    next.appendChild(nextImg);
+  } else {
+    next.classList.add("next");
+  }
   next.id = "next";
   next.addEventListener("click", function () {
     // Get the next track based on the direction of the track.
@@ -484,7 +559,21 @@ const advanceTheme = (
 
   const vol = document.createElement("div");
   vol.style.backgroundColor = buttonColor;
-  vol.classList.add("volumeUp");
+
+  const volImg = document.createElement("img");
+  const muteImg = document.createElement("img");
+
+  volImg.src = volIcon;
+  volImg.style.width = "30px";
+  volImg.style.height = "30px";
+  muteImg.src = muteIcon;
+  muteImg.style.width = "30px";
+  muteImg.style.height = "30px";
+  if (volIcon) {
+    vol.appendChild(volImg);
+  } else {
+    vol.classList.add("volumeUp");
+  }
   vol.id = "vol";
   vol.addEventListener("click", function () {
     //vol
@@ -492,31 +581,76 @@ const advanceTheme = (
     mute = !mute;
     if (mute) {
       howlPlayer.mute(true);
-      vol.classList.remove("volumeUp");
-      vol.classList.add("volumeOff");
+      if (volIcon) {
+        vol.removeChild(volImg);
+      } else {
+        vol.classList.remove("volumeUp");
+      }
+      if (muteIcon) {
+        vol.appendChild(muteImg);
+      } else {
+        vol.classList.add("volumeOff");
+      }
     } else {
       howlPlayer.mute(false);
-      vol.classList.add("volumeUp");
-      vol.classList.remove("volumeOff");
+      if (volIcon) {
+        vol.appendChild(volImg);
+      } else {
+        vol.classList.add("volumeUp");
+      }
+      if (muteIcon) {
+        vol.removeChild(muteImg);
+      } else {
+        vol.classList.remove("volumeOff");
+      }
     }
   });
   otherControl.appendChild(vol);
 
   const loop_ = document.createElement("div");
   loop_.style.backgroundColor = buttonColor;
-  loop_.classList.add("loop");
+  const loopImg = document.createElement("img");
+  const loopOffImg = document.createElement("img");
+
+  loopImg.src = loopIcon;
+  loopImg.style.width = "30px";
+  loopImg.style.height = "30px";
+  loopOffImg.src = loopOffIcon;
+  loopOffImg.style.width = "30px";
+  loopOffImg.style.height = "30px";
+  if (loopIcon) {
+    loop_.appendChild(loopImg);
+  } else {
+    loop_.classList.add("loop");
+  }
   loop_.id = "loop";
   loop_.addEventListener("click", function () {
     //loop
     loop = !loop;
     if (loop) {
       howlPlayer.loop(true);
-      loop_.classList.remove("loop");
-      loop_.classList.add("loopOff");
+      if (loopIcon) {
+        loop_.removeChild(loopImg);
+      } else {
+        loop_.classList.remove("loop");
+      }
+      if (loopOffIcon) {
+        loop_.appendChild(loopOffImg);
+      } else {
+        loop_.classList.add("loopOff");
+      }
     } else {
       howlPlayer.loop(false);
-      loop_.classList.add("loop");
-      loop_.classList.remove("loopOff");
+      if (loopIcon) {
+        loop_.appendChild(loopImg);
+      } else {
+        loop_.classList.add("loop");
+      }
+      if (loopOffIcon) {
+        loop_.removeChild(loopOffImg);
+      } else {
+        loop_.classList.remove("loopOff");
+      }
     }
   });
   otherControl.appendChild(loop_);

@@ -181,7 +181,13 @@ function MediaPlayer(_ref) {
     editable = _ref.editable,
     fontFamily = _ref.fontFamily,
     playIcon = _ref.playIcon,
-    pauseIcon = _ref.pauseIcon;
+    pauseIcon = _ref.pauseIcon,
+    volIcon = _ref.volIcon,
+    muteIcon = _ref.muteIcon,
+    loopIcon = _ref.loopIcon,
+    loopOffIcon = _ref.loopOffIcon,
+    nextIcon = _ref.nextIcon,
+    prevIcon = _ref.prevIcon;
   createStyles();
   var context = new AudioContext();
   console.log("Currently have " + (player.length + 1) + " playing");
@@ -269,7 +275,7 @@ function MediaPlayer(_ref) {
   var mediaContainer = document.createElement("div");
   mediaContainer.classList.add("mediaContainer");
   if (theme === "advance") {
-    advanceTheme(buttonColor, mediaContainer, howlPlayer, img, title, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight, editable, fontFamily);
+    advanceTheme(buttonColor, mediaContainer, howlPlayer, img, title, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight, editable, fontFamily, playIcon, pauseIcon, volIcon, muteIcon, loopIcon, loopOffIcon, nextIcon, prevIcon);
   } else {
     simpleTheme(buttonColor, mediaContainer, howlPlayer, htmlId, playIcon, pauseIcon);
   }
@@ -320,6 +326,7 @@ var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, 
   var playImg = document.createElement("img");
   var pauseImg = document.createElement("img");
   playImg.src = playIcon;
+  pauseImg.src = pauseIcon;
   playImg.style.width = "40px";
   playImg.style.height = "40px";
   pauseImg.style.width = "40px";
@@ -369,8 +376,7 @@ var simpleTheme = function simpleTheme(buttonColor, mediaContainer, howlPlayer, 
   mediaSingle.appendChild(btn);
   mediaContainer.appendChild(mediaSingle);
 };
-var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer, img, titleValue, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight, editable, fontFamily) {
-  //  console.log("adv");
+var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer, img, titleValue, titleColor, titleSize, playControlPosition, playControlValues, otherControlPosition, otherControlValues, mediaSeekPosition, mediaSeekValues, imgWidth, imgHeight, editable, fontFamily, playIcon, pauseIcon, volIcon, muteIcon, loopIcon, loopOffIcon, nextIcon, prevIcon) {
   mediaContainer.innerHTML = "";
   var mediaTop = document.createElement("div");
   mediaTop.classList.add("mediaTop");
@@ -422,11 +428,17 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   }
   var prev = document.createElement("div");
   prev.style.backgroundColor = buttonColor;
-  prev.classList.add("prev");
+  var prevImg = document.createElement("img");
+  prevImg.src = prevIcon;
+  prevImg.style.width = "30px";
+  prevImg.style.height = "30px";
+  if (prevIcon) {
+    prev.appendChild(prevImg);
+  } else {
+    prev.classList.add("prev");
+  }
   prev.id = "prev";
   prev.addEventListener("click", function () {
-    //prev
-    //console.log("prev");
     index = index - 1;
     if (index < 0) {
       // index = playlist.length - 1;
@@ -435,16 +447,35 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   playControl.appendChild(prev);
   var play = document.createElement("div");
   play.style.backgroundColor = buttonColor;
-  play.classList.add("play");
   play.id = "play";
   play_btn = play;
+  var playImg = document.createElement("img");
+  var pauseImg = document.createElement("img");
+  playImg.src = playIcon;
+  pauseImg.src = pauseIcon;
+  playImg.style.width = "40px";
+  playImg.style.height = "40px";
+  pauseImg.style.width = "40px";
+  pauseImg.style.height = "40px";
+  if (playIcon) {
+    play.appendChild(playImg);
+  } else {
+    play.classList.add("play");
+  }
   play.addEventListener("click", function () {
     isplayed = !isplayed;
     if (isplayed) {
-      //  console.log("play ");
       howlPlayer.play();
-      play.classList.remove("play");
-      play.classList.add("pause");
+      if (playIcon) {
+        play.removeChild(playImg);
+      } else {
+        play.classList.remove("play");
+      }
+      if (pauseIcon) {
+        play.appendChild(pauseImg);
+      } else {
+        play.classList.add("pause");
+      }
       playing = "playing";
       var sounds = howler__WEBPACK_IMPORTED_MODULE_0__.Howler._howls;
       for (var i = 0; i < sounds.length; i++) {
@@ -453,17 +484,32 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
         }
       }
     } else {
-      // console.log("pause ");
       howlPlayer.pause();
-      play.classList.add("play");
-      play.classList.remove("pause");
+      if (playIcon) {
+        play.appendChild(playImg);
+      } else {
+        play.classList.add("play");
+      }
+      if (pauseIcon) {
+        play.removeChild(pauseImg);
+      } else {
+        play.classList.remove("pause");
+      }
       playing = "paused";
     }
   });
   playControl.appendChild(play);
   var next = document.createElement("div");
   next.style.backgroundColor = buttonColor;
-  next.classList.add("next");
+  var nextImg = document.createElement("img");
+  nextImg.src = nextIcon;
+  nextImg.style.width = "30px";
+  nextImg.style.height = "30px";
+  if (nextIcon) {
+    next.appendChild(nextImg);
+  } else {
+    next.classList.add("next");
+  }
   next.id = "next";
   next.addEventListener("click", function () {
     // Get the next track based on the direction of the track.
@@ -490,7 +536,19 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
   }
   var vol = document.createElement("div");
   vol.style.backgroundColor = buttonColor;
-  vol.classList.add("volumeUp");
+  var volImg = document.createElement("img");
+  var muteImg = document.createElement("img");
+  volImg.src = volIcon;
+  volImg.style.width = "30px";
+  volImg.style.height = "30px";
+  muteImg.src = muteIcon;
+  muteImg.style.width = "30px";
+  muteImg.style.height = "30px";
+  if (volIcon) {
+    vol.appendChild(volImg);
+  } else {
+    vol.classList.add("volumeUp");
+  }
   vol.id = "vol";
   vol.addEventListener("click", function () {
     //vol
@@ -498,30 +556,74 @@ var advanceTheme = function advanceTheme(buttonColor, mediaContainer, howlPlayer
     mute = !mute;
     if (mute) {
       howlPlayer.mute(true);
-      vol.classList.remove("volumeUp");
-      vol.classList.add("volumeOff");
+      if (volIcon) {
+        vol.removeChild(volImg);
+      } else {
+        vol.classList.remove("volumeUp");
+      }
+      if (muteIcon) {
+        vol.appendChild(muteImg);
+      } else {
+        vol.classList.add("volumeOff");
+      }
     } else {
       howlPlayer.mute(false);
-      vol.classList.add("volumeUp");
-      vol.classList.remove("volumeOff");
+      if (volIcon) {
+        vol.appendChild(volImg);
+      } else {
+        vol.classList.add("volumeUp");
+      }
+      if (muteIcon) {
+        vol.removeChild(muteImg);
+      } else {
+        vol.classList.remove("volumeOff");
+      }
     }
   });
   otherControl.appendChild(vol);
   var loop_ = document.createElement("div");
   loop_.style.backgroundColor = buttonColor;
-  loop_.classList.add("loop");
+  var loopImg = document.createElement("img");
+  var loopOffImg = document.createElement("img");
+  loopImg.src = loopIcon;
+  loopImg.style.width = "30px";
+  loopImg.style.height = "30px";
+  loopOffImg.src = loopOffIcon;
+  loopOffImg.style.width = "30px";
+  loopOffImg.style.height = "30px";
+  if (loopIcon) {
+    loop_.appendChild(loopImg);
+  } else {
+    loop_.classList.add("loop");
+  }
   loop_.id = "loop";
   loop_.addEventListener("click", function () {
     //loop
     loop = !loop;
     if (loop) {
       howlPlayer.loop(true);
-      loop_.classList.remove("loop");
-      loop_.classList.add("loopOff");
+      if (loopIcon) {
+        loop_.removeChild(loopImg);
+      } else {
+        loop_.classList.remove("loop");
+      }
+      if (loopOffIcon) {
+        loop_.appendChild(loopOffImg);
+      } else {
+        loop_.classList.add("loopOff");
+      }
     } else {
       howlPlayer.loop(false);
-      loop_.classList.add("loop");
-      loop_.classList.remove("loopOff");
+      if (loopIcon) {
+        loop_.appendChild(loopImg);
+      } else {
+        loop_.classList.add("loop");
+      }
+      if (loopOffIcon) {
+        loop_.removeChild(loopOffImg);
+      } else {
+        loop_.classList.remove("loopOff");
+      }
     }
   });
   otherControl.appendChild(loop_);
@@ -605,7 +707,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   styles: () => (/* binding */ styles)
 /* harmony export */ });
-var styles = "\n    @font-face {\n        font-family: \"Gentona\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBook.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookBold.otf\") format(\"opentype\");\n   }\n    @font-face {\n        font-family: \"GentonaItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookItalic.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBold.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaSemiBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaSemiBold.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraBoldItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBoldItalic.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraLight\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLight.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaHeavy\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaHeavy.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaThin\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaThin.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaMedium\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaMedium.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraLightItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLightItalic.otf\") format(\"opentype\");\n    }\n    .mediaPlayer {\n        height: auto;\n        width: 100%;\n        }\n\n    .mediaContainer {\n        position: relative;\n        display: flex;\n        margin: 0 auto;\n        width: 100%;\n        align-items: center;\n        justify-content: center;\n        flex-direction: column;\n        gap: 20px;\n        padding: 20px 0;\n    }\n\n    .mediaTop {\n        flex: 1;\n    }\n\n    .mediaTop .title {\n        color: white;\n    }\n\n    .mediaMiddle {\n        flex: 3;\n        display: flex;\n        flex-direction: row;\n        gap: 20px;\n    }\n\n    .mediaBottom {\n        flex: 1;\n        display: flex;\n        flex-direction: row;\n        align-items: center;\n        justify-content: center;\n        gap: 10px;\n    }\n\n    .mediaSingle {\n        flex: 1;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        border-radius: 50%;\n    }\n\n    .playControl, .otherControl {\n        display: flex;\n        align-items: center;\n        gap: 5px;\n    }\n    .mediaSettingSidebar {\n        position: absolute;\n        top: 0;\n        right: 0;\n        height: 100%;\n        width: 160px;\n       /* padding: 20px 0;\n       box-shadow: 0 5px 1px rgba(0, 0, 0, 0.1);\n       */\n        background-color: #ccc;\n        transition: all 0.4s ease;\n        z-index:200;\n    }\n    .sidebarContent {\n        display: flex;\n        height: 100%;\n        flex-direction: column;\n        justify-content: space-between;\n        padding: 30px 16px;\n    }\n    .hideSidebar {\n        left:0;\n    }\n\n    .playControl button img {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n    }\n    .mediaSeek {\n        display: flex;\n        gap: 10px;\n        flex-direction: column;\n    }\n    .timer{\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 10px;\n    }\n    .progress, .duration{\n        font-size: 14px\n    }\n    .bgImage{\n        position: absolute;\n        top:0;\n        left:0;\n        width:100%;\n        height:100%;\n        object-fit: cover;\n    }\n    /*both range slider*/\n    input[type=\"range\"] {\n        -webkit-appearance: none;\n        width: 200px;\n        outline: none;\n        height: 2px;\n        margin: 0 15px;\n    }\n\n    input[type=\"range\"]::-webkit-slider-thumb {\n        -webkit-appearance: none;\n        height: 15px;\n        width: 3px;\n        background-color: rgb(84, 216, 75);\n        /* border-radius: 50%;*/\n        cursor: pointer;\n    }\n\n            \n    .play,\n    .pause,\n    .next,\n    .prev,\n    .volumeOff,\n    .volumeUp,\n    .loopOff,\n    .loop {\n        cursor: pointer;\n        display: inline-block;\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .play {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .pause {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .next {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .prev {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .loop {\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .loopOff {\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M11.577 5.211a7.8 7.8 0 1 0 5.938 2.274l.849-.849a9 9 0 1 1-7.195-2.598l-1.19-1.19l.85-.848l2.474 2.475a.5.5 0 0 1 0 .707l-.495.495l-1.98 1.98l-.848-.849z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .settings {\n        display: inline-block;\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23000' d='M600.704 64a32 32 0 0 1 30.464 22.208l35.2 109.376c14.784 7.232 28.928 15.36 42.432 24.512l112.384-24.192a32 32 0 0 1 34.432 15.36L944.32 364.8a32 32 0 0 1-4.032 37.504l-77.12 85.12a357 357 0 0 1 0 49.024l77.12 85.248a32 32 0 0 1 4.032 37.504l-88.704 153.6a32 32 0 0 1-34.432 15.296L708.8 803.904c-13.44 9.088-27.648 17.28-42.368 24.512l-35.264 109.376A32 32 0 0 1 600.704 960H423.296a32 32 0 0 1-30.464-22.208L357.696 828.48a352 352 0 0 1-42.56-24.64l-112.32 24.256a32 32 0 0 1-34.432-15.36L79.68 659.2a32 32 0 0 1 4.032-37.504l77.12-85.248a357 357 0 0 1 0-48.896l-77.12-85.248A32 32 0 0 1 79.68 364.8l88.704-153.6a32 32 0 0 1 34.432-15.296l112.32 24.256c13.568-9.152 27.776-17.408 42.56-24.64l35.2-109.312A32 32 0 0 1 423.232 64H600.64zm-23.424 64H446.72l-36.352 113.088l-24.512 11.968a294 294 0 0 0-34.816 20.096l-22.656 15.36l-116.224-25.088l-65.28 113.152l79.68 88.192l-1.92 27.136a293 293 0 0 0 0 40.192l1.92 27.136l-79.808 88.192l65.344 113.152l116.224-25.024l22.656 15.296a294 294 0 0 0 34.816 20.096l24.512 11.968L446.72 896h130.688l36.48-113.152l24.448-11.904a288 288 0 0 0 34.752-20.096l22.592-15.296l116.288 25.024l65.28-113.152l-79.744-88.192l1.92-27.136a293 293 0 0 0 0-40.256l-1.92-27.136l79.808-88.128l-65.344-113.152l-116.288 24.96l-22.592-15.232a288 288 0 0 0-34.752-20.096l-24.448-11.904L577.344 128zM512 320a192 192 0 1 1 0 384a192 192 0 0 1 0-384m0 64a128 128 0 1 0 0 256a128 128 0 0 0 0-256'/%3E%3C/svg%3E\");\n        background-color: currentColor;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .volumeUp {\n        margin-left: 10px;\n        width: 1.1em;\n        height: 1.1em;\n        font-size: 1.1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    \n    .volumeOff {\n        margin-left: 10px;\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .musicImg {\n        display: inline-block;\n        width: 1.2em;\n        height: 1.2em;\n        font-size: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M18 4.309L8 6.5v12.7c0 .937-.627 1.85-1.47 2.243c-.157.073-1.148.295-1.277.32c-1.243.25-2.198-.814-2.25-1.89s.653-1.974 1.472-2.139l1.265-.317c.447-.112.76-.514.76-.975V5.96a1 1 0 0 1 .786-.976l11.607-2.542a.5.5 0 0 1 .607.488v13.61c0 .937-.633 1.85-1.483 2.243c-.158.073-1.158.295-1.288.32c-1.253.25-2.217-.814-2.27-1.89s.66-1.974 1.485-2.139l1.292-.32c.449-.11.764-.513.764-.975z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .closeBtn {\n        display: inline-block;\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12'/%3E%3Cpath fill='%23000' d='M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z'/%3E%3C/svg%3E\");\n        background-color: currentColor;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n";
+var styles = "\n    @font-face {\n        font-family: \"Gentona\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBook.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookBold.otf\") format(\"opentype\");\n   }\n    @font-face {\n        font-family: \"GentonaItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaBookItalic.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBold.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaSemiBold\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaSemiBold.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraBoldItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraBoldItalic.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraLight\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLight.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaHeavy\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaHeavy.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaThin\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaThin.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaMedium\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaMedium.otf\") format(\"opentype\");\n    }\n    @font-face {\n        font-family: \"GentonaExtraLightItalic\";\n        src: url(\"https://cdn.jsdelivr.net/gh/BigYusuf/media-player@master/fonts/GentonaExtraLightItalic.otf\") format(\"opentype\");\n    }\n    .mediaPlayer {\n        height: auto;\n        width: 100%;\n        }\n\n    .mediaContainer {\n        position: relative;\n        display: flex;\n        margin: 0 auto;\n        width: 100%;\n        align-items: center;\n        justify-content: center;\n        flex-direction: column;\n        gap: 20px;\n        padding: 20px 0;\n    }\n\n    .mediaTop {\n        flex: 1;\n    }\n\n    .mediaTop .title {\n        color: white;\n    }\n\n    .mediaMiddle {\n        flex: 3;\n        display: flex;\n        flex-direction: row;\n        gap: 20px;\n    }\n\n    .mediaBottom {\n        flex: 1;\n        display: flex;\n        flex-direction: row;\n        align-items: center;\n        justify-content: center;\n        gap: 10px;\n    }\n\n    .mediaSingle {\n        flex: 1;\n        display: flex;\n        align-items: center;\n        justify-content: center;\n        border-radius: 50%;\n    }\n\n    .playControl, .otherControl {\n        display: flex;\n        align-items: center;\n        gap: 5px;\n    }\n    .mediaSettingSidebar {\n        position: absolute;\n        top: 0;\n        right: 0;\n        height: 100%;\n        width: 160px;\n       /* padding: 20px 0;\n       box-shadow: 0 5px 1px rgba(0, 0, 0, 0.1);\n       */\n        background-color: #ccc;\n        transition: all 0.4s ease;\n        z-index:200;\n    }\n    .sidebarContent {\n        display: flex;\n        height: 100%;\n        flex-direction: column;\n        justify-content: space-between;\n        padding: 30px 16px;\n    }\n    .hideSidebar {\n        left:0;\n    }\n\n    .playControl button img {\n        width: 20px;\n        height: 20px;\n        cursor: pointer;\n    }\n    .mediaSeek {\n        display: flex;\n        gap: 10px;\n        flex-direction: column;\n    }\n    .timer{\n        display: flex;\n        align-items: center;\n        justify-content: space-between;\n        padding: 0 10px;\n    }\n    .progress, .duration{\n        font-size: 14px\n    }\n    .bgImage{\n        position: absolute;\n        top:0;\n        left:0;\n        width:100%;\n        height:100%;\n        object-fit: cover;\n    }\n    /*both range slider*/\n    input[type=\"range\"] {\n        -webkit-appearance: none;\n        width: 200px;\n        outline: none;\n        height: 2px;\n        margin: 0 15px;\n    }\n\n    input[type=\"range\"]::-webkit-slider-thumb {\n        -webkit-appearance: none;\n        height: 15px;\n        width: 3px;\n        background-color: rgb(84, 216, 75);\n        /* border-radius: 50%;*/\n        cursor: pointer;\n    }\n\n            \n    .play,\n    .pause,\n    .next,\n    .prev,\n    .volumeOff,\n    .volumeUp,\n    .loopOff,\n    .loop {\n        cursor: pointer;\n        display: inline-block;\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .play {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m9.524 4.938l10.092 6.21a1 1 0 0 1 0 1.704l-10.092 6.21A1 1 0 0 1 8 18.21V5.79a1 1 0 0 1 1.524-.852M9.2 6.148v11.705L18.71 12z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .pause {\n        font-size: 1.5em;\n        width: 1.5em;\n        height: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M7 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933H7c-.552 0-1-.418-1-.933V5.933C6 5.418 6.448 5 7 5m.2 12.8h1.6V6.2H7.2zM15 5h2c.552 0 1 .418 1 .933v12.134c0 .515-.448.933-1 .933h-2c-.552 0-1-.418-1-.933V5.933c0-.515.448-.933 1-.933m.2 12.8h1.6V6.2h-1.6z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .next {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M26.002 5a1 1 0 1 1 2 0v22a1 1 0 0 1-2 0zM3.999 6.504c0-2.002 2.236-3.192 3.897-2.073l14.003 9.432A2.5 2.5 0 0 1 21.912 18L7.909 27.56c-1.66 1.132-3.91-.056-3.91-2.065zm2.78-.414a.5.5 0 0 0-.78.414v18.992a.5.5 0 0 0 .782.412l14.003-9.559a.5.5 0 0 0-.002-.828z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n\n    .prev {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Cpath fill='%23000' d='M4.5 3.75a.75.75 0 0 0-1.5 0v20.5a.75.75 0 0 0 1.5 0zM25 5.254c0-1.816-2.041-2.884-3.533-1.848l-12.504 8.68a2.25 2.25 0 0 0-.013 3.688l12.504 8.81c1.49 1.05 3.546-.015 3.546-1.839zm-2.678-.616a.75.75 0 0 1 1.178.616v17.491a.75.75 0 0 1-1.182.613l-12.504-8.81a.75.75 0 0 1 .004-1.23z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    } \n    .loop {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23000' d='M2 5h10v3l4-4l-4-4v3H0v6h2zm12 6H4V8l-4 4l4 4v-3h12V7h-2z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .loopOff {\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath fill='%23000' d='M208 312v32h112v-32h-40V176h-32v24h-32v32h32v80z'/%3E%3Cpath fill='%23000' d='M464 210.511V264a112.127 112.127 0 0 1-112 112H78.627l44.686-44.687l-22.626-22.626L56 353.373l-4.415 4.414l-33.566 33.567l74.022 83.276l23.918-21.26L75.63 408H352c79.4 0 144-64.6 144-144v-85.489Z'/%3E%3Cpath fill='%23000' d='M48 256a112.127 112.127 0 0 1 112-112h273.373l-44.686 44.687l22.626 22.626L456 166.627l4.117-4.116l33.864-33.865l-74.022-83.276l-23.918 21.26L436.37 112H160c-79.4 0-144 64.6-144 144v85.787l32-32Z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .settings {\n        display: inline-block;\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23000' d='M600.704 64a32 32 0 0 1 30.464 22.208l35.2 109.376c14.784 7.232 28.928 15.36 42.432 24.512l112.384-24.192a32 32 0 0 1 34.432 15.36L944.32 364.8a32 32 0 0 1-4.032 37.504l-77.12 85.12a357 357 0 0 1 0 49.024l77.12 85.248a32 32 0 0 1 4.032 37.504l-88.704 153.6a32 32 0 0 1-34.432 15.296L708.8 803.904c-13.44 9.088-27.648 17.28-42.368 24.512l-35.264 109.376A32 32 0 0 1 600.704 960H423.296a32 32 0 0 1-30.464-22.208L357.696 828.48a352 352 0 0 1-42.56-24.64l-112.32 24.256a32 32 0 0 1-34.432-15.36L79.68 659.2a32 32 0 0 1 4.032-37.504l77.12-85.248a357 357 0 0 1 0-48.896l-77.12-85.248A32 32 0 0 1 79.68 364.8l88.704-153.6a32 32 0 0 1 34.432-15.296l112.32 24.256c13.568-9.152 27.776-17.408 42.56-24.64l35.2-109.312A32 32 0 0 1 423.232 64H600.64zm-23.424 64H446.72l-36.352 113.088l-24.512 11.968a294 294 0 0 0-34.816 20.096l-22.656 15.36l-116.224-25.088l-65.28 113.152l79.68 88.192l-1.92 27.136a293 293 0 0 0 0 40.192l1.92 27.136l-79.808 88.192l65.344 113.152l116.224-25.024l22.656 15.296a294 294 0 0 0 34.816 20.096l24.512 11.968L446.72 896h130.688l36.48-113.152l24.448-11.904a288 288 0 0 0 34.752-20.096l22.592-15.296l116.288 25.024l65.28-113.152l-79.744-88.192l1.92-27.136a293 293 0 0 0 0-40.256l-1.92-27.136l79.808-88.128l-65.344-113.152l-116.288 24.96l-22.592-15.232a288 288 0 0 0-34.752-20.096l-24.448-11.904L577.344 128zM512 320a192 192 0 1 1 0 384a192 192 0 0 1 0-384m0 64a128 128 0 1 0 0 256a128 128 0 0 0 0-256'/%3E%3C/svg%3E\");\n        background-color: currentColor;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .volumeUp {\n        margin-left: 10px;\n        width: 1.1em;\n        height: 1.1em;\n        font-size: 1.1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M12 5.414L7.914 9.5H3v5h4.914L12 18.586zM7.5 8.5l3.793-3.793A1 1 0 0 1 13 5.414v13.172a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1zm9.808 8.308A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12c0 2.21-.895 4.21-2.343 5.657zm-1.98-1.98A3.98 3.98 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12a5.18 5.18 0 0 1-1.523 3.677z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    \n    .volumeOff {\n        margin-left: 10px;\n        width: 1em;\n        height: 1em;\n        font-size: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='m8.849 7.151l2.444-2.444A1 1 0 0 1 13 5.414v5.889l2.864 2.863A4 4 0 0 0 16.5 12a3.98 3.98 0 0 0-1.172-2.828l.849-.849A5.18 5.18 0 0 1 17.7 12c0 1.13-.36 2.177-.973 3.03l1.143 1.143A6.77 6.77 0 0 0 19.3 12c0-1.83-.724-3.54-1.992-4.808l.849-.849A7.98 7.98 0 0 1 20.5 12a7.97 7.97 0 0 1-1.776 5.027l2.701 2.7l-.849.85L3.85 3.848L4.697 3zM12 10.303V5.414L9.556 7.86zM7.803 9.5H3v5h4.914L12 18.586v-4.889l1 1v3.889a1 1 0 0 1-1.707.707L7.5 15.5H3a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h3.803z'/%3E%3C/svg%3E\");\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n    }\n    .musicImg {\n        display: inline-block;\n        width: 1.2em;\n        height: 1.2em;\n        font-size: 1.5em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' fill-rule='evenodd' d='M18 4.309L8 6.5v12.7c0 .937-.627 1.85-1.47 2.243c-.157.073-1.148.295-1.277.32c-1.243.25-2.198-.814-2.25-1.89s.653-1.974 1.472-2.139l1.265-.317c.447-.112.76-.514.76-.975V5.96a1 1 0 0 1 .786-.976l11.607-2.542a.5.5 0 0 1 .607.488v13.61c0 .937-.633 1.85-1.483 2.243c-.158.073-1.158.295-1.288.32c-1.253.25-2.217-.814-2.27-1.89s.66-1.974 1.485-2.139l1.292-.32c.449-.11.764-.513.764-.975z'/%3E%3C/svg%3E\");\n        background-color: blue;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n    .closeBtn {\n        display: inline-block;\n        width: 1em;\n        height: 1em;\n        --svg: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath fill='%23000' d='M16 2C8.2 2 2 8.2 2 16s6.2 14 14 14s14-6.2 14-14S23.8 2 16 2m0 26C9.4 28 4 22.6 4 16S9.4 4 16 4s12 5.4 12 12s-5.4 12-12 12'/%3E%3Cpath fill='%23000' d='M21.4 23L16 17.6L10.6 23L9 21.4l5.4-5.4L9 10.6L10.6 9l5.4 5.4L21.4 9l1.6 1.6l-5.4 5.4l5.4 5.4z'/%3E%3C/svg%3E\");\n        background-color: currentColor;\n        -webkit-mask-image: var(--svg);\n        mask-image: var(--svg);\n        -webkit-mask-repeat: no-repeat;\n        mask-repeat: no-repeat;\n        -webkit-mask-size: 100% 100%;\n        mask-size: 100% 100%;\n    }\n";
 
 /***/ }),
 
